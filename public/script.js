@@ -8,11 +8,20 @@ var methodfile;
 $(function() {
   console.log("hello world :o");
   $("#getmethods").on("click", getmethods);
+  $("#downloadfiles").on("click", triggerdownload);
 });
 
-// fetch the initial list of dreams
 
 
+function triggerdownload() {
+  let url = "/download?secret="+ $("#secret").val();
+  $("#download").children().remove();
+  $("#download").append(`<p id="loading">sending...</p>`);
+  fetch(url)
+  .then(response => {
+    $("#loading").text("done");
+  });
+}
 
 function getmethods() {
   $("#container").children().remove();
