@@ -4,6 +4,8 @@ const addIDs = require('./addIDs.js');
 const connect = require('./mongoose/connect.js');
 const find = require('./find/find.js');
 
+//this seems to be doing the same thing as temporary.js
+//only not actually adding to the database. was this testing before I did that??
 module.exports = function separate() {
   connect();
   find("title", {type: "method"}, (t) => {
