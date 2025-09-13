@@ -7,6 +7,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 
+/*
 const router = require('./src/router.js');
 const buildlocal = require('./src/buildlocal.js');
 const filter = require('./src/filterDatabase.js');
@@ -16,6 +17,8 @@ const updatedove = require('./src/updatedove.js');
 const doveformat = require('./src/dovebells.js');
 const separate = require('./src/separate.js');
 const update = require('./src/temporary.js');
+*/
+const getmethods = require('./src/getmethods.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -38,10 +41,17 @@ app.get("/towers", (request, response) => {
   response.send(require("./src/towers.json"));
 });
 
+app.get("/methods", (request, response) => {
+  getmethods((res) => {
+    response.send(res);
+  });
+});
+
 let methods = false;
 app.get('/'+process.env.SECRET, function(request, response) {
   console.log(request.query);
   console.log("get!");
+  /*
   if (!methods) {
     methods = true;
     router(request.query, Date.now(), true, () => {
@@ -49,6 +59,7 @@ app.get('/'+process.env.SECRET, function(request, response) {
       buildlocal();
     });
   }
+  */
   response.sendStatus(200);
 });
 
