@@ -14,8 +14,10 @@ const stream = require('stream');
 var things = ["methods2","performances","titles"];
 
 module.exports = function update() {
+  //entirely rebuilding collections
   connectDrop(["methods", "performances"], (db) => {
     find("title", {type: "method"}, (titles) => {
+      //methods json file created separately
       let methods = JSON.parse(fs.readFileSync('work/methods.json'));
       console.log("methods: "+ methods.length);
       let i = 0;
@@ -27,6 +29,7 @@ module.exports = function update() {
       
       function cycle() {
         do {
+          //remove methods from source array as they are added to the new one
           let res = addIDs(methods[0], titles);
           mm.push(methods.shift());
           if (res.title) {
@@ -35,6 +38,7 @@ module.exports = function update() {
           if (res.newtitle) tt.push(res.newtitle);
           performances.push(...res.performances);
           i++;
+          //100 methods at a time
         } while (methods.length && i%100 > 0);
         console.log(i);
         addRecords(mm, "method", () => {
