@@ -1,21 +1,38 @@
 // client-side js, loaded by index.html
 // run by the browser each time the page is loaded
 
-console.log("hello world :o");
 
-// define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
+var methodfile;
+
 
 $(function() {
-  
+  console.log("hello world :o");
+  $("#getmethods").on("click", getmethods);
 });
 
 // fetch the initial list of dreams
-fetch("/methods")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
+
+
+
+function getmethods() {
+  $("#container").children().remove();
+  $("#container").append(`<p>loading file...</p>`);
+  fetch("/methods")
+  .then(response => {
+    methodfile = response;
     // remove the loading text
-    $("#dreams").text("methods ready");
-  
+    $("#container").children().remove();
+    $("#container").append(`<button id="getfile">get file</button>`);
+    $("#getfile").on("click", downloadfile);
   });
+}
+
+function downloadfile() {
+  const a = document.createElement('a');
+  const blob = new Blob([methodfile], {type: "text/plain"});
+  a.href = URL.createObjectURL(blob);
+  a.download = "methods.json";
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+}
