@@ -18,6 +18,7 @@ const doveformat = require('./src/dovebells.js');
 const separate = require('./src/separate.js');
 const update = require('./src/temporary.js');
 */
+const connect = require('./src/mongoose/connect.js');
 const getmethods = require('./src/getmethods.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -34,6 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => {
+  connect();
   response.sendFile(__dirname + "/views/index.html");
 });
 
