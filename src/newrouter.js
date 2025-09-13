@@ -18,10 +18,11 @@ module.exports = function router(download, filter, cb) {
     console.log("parsing methods");
     let things = ["method", "performance", "title"];
     let i = 0;
-
+    let save = {methods: []};
     
     parseMethods(filter, (res) => {
       console.log(res.methods.length + " methods");
+      res.methods.forEach(m => save.methods.push(m));
       addStuff(res);
     });
 
@@ -34,7 +35,7 @@ module.exports = function router(download, filter, cb) {
           addStuff(res);
         } else {
           console.log("finished???");
-          cb(res);
+          cb(save);
         }
       });
     }
