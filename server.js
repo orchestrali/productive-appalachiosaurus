@@ -57,7 +57,8 @@ app.get("/methods", (request, response) => {
 
 app.get("/download", (request, response) => {
   if (request.query.secret === process.env.SECRET) {
-    router(true, true, (res) => {
+    //download, filter, callback
+    router(false, true, (res) => {
       response.send(res);
     });
   } else {
