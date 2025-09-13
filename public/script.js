@@ -61,7 +61,7 @@ function getmethods() {
   fetch("/methods")
   .then(response => response.json())
   .then(methods => {
-    methodfile = JSON.stringify(methods);
+    methodfile = JSON.stringify(methods, null, 2);
     // remove the loading text
     $("#container").children().remove();
     $("#container").append(`<button id="getfile">get file</button>`);
