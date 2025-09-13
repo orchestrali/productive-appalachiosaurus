@@ -1,5 +1,6 @@
 const fs = require('fs');
 const stream = require('stream');
+const bottom = 56896; //highest ccNum I currently have
 
 module.exports = function filterCollection(cb) {
   
@@ -10,7 +11,7 @@ module.exports = function filterCollection(cb) {
     let i = collection.length-1;
     while (i >= 0) {
       if (Array.isArray(collection[i].method)) {
-        collection[i].method = collection[i].method.filter(o => !methodlist.find(m => m.ccNum === Number(o.id.slice(1))));
+        collection[i].method = collection[i].method.filter(o => Number(o.id.slice(1)) > bottom);
         if (collection[i].method.length === 0) {
           collection.splice(i, 1);
           console.log("methodSet "+(i+1)+", no new methods");
@@ -18,7 +19,7 @@ module.exports = function filterCollection(cb) {
           console.log("methodSet "+(i+1)+", num new methods: "+collection[i].method.length);
         }
       } else {
-        if (methodlist.find(o => o.ccNum === Number(collection[i].method.id.slice(1)))) {
+        if (Number(collection[i].method.id.slice(1)) <= bottom) {
           collection.splice(i, 1);
           console.log("methodSet "+(i+1)+", no new methods");
         } else {
