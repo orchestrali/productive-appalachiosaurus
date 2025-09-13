@@ -12,7 +12,7 @@ const router = require('./src/router.js');
 const buildlocal = require('./src/buildlocal.js');
 const filter = require('./src/filterDatabase.js');
 const courseorder = require('./src/courseorder/courseorders.js');
-const updatefiles = require('./src/updatefiles.js');
+
 const updatedove = require('./src/updatedove.js');
 const doveformat = require('./src/dovebells.js');
 const separate = require('./src/separate.js');
@@ -20,11 +20,13 @@ const update = require('./src/temporary.js');
 */
 const connect = require('./src/mongoose/connect.js');
 const getmethods = require('./src/getmethods.js');
+const updatefiles = require('./src/updatefiles.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var db;
 //updatefiles(() => {});
 //buildlocal();
 //separate();
@@ -37,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (request, response) => {
   
   response.sendFile(__dirname + "/views/index.html");
-  connect();
+  db = connect();
 });
 
 app.get("/towers", (request, response) => {
@@ -45,9 +47,17 @@ app.get("/towers", (request, response) => {
 });
 
 app.get("/methods", (request, response) => {
-  getmethods((res) => {
-    response.send(res);
-  });
+  if (db) {
+    getmethods((res) => {
+      response.send(res);
+    });
+  }
+});
+
+app.get("/download", (request, response) => {
+  if (request.query.secret === process.env.SECRET) {
+    updatefiles(() => {});
+  }
 });
 
 let methods = false;
