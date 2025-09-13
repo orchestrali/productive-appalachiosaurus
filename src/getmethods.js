@@ -7,10 +7,22 @@ var query = {
 };
 
 module.exports = function getmethods(cb) {
-  var db = connect();
+  //var db = connect();
+  let fields = query.fields.split(" ");
   find("method", query, (results) => {
     console.log(results.length);
     //I could just pass the callback to find, but in case I want to do anything...
-    cb(results);
+    let res = results.map(o => {
+      let obj = {};
+      fields.forEach(f => {
+        if (f === "oldtitle") {
+          if (o[f] && o[f].length) obj.oldtitle = o[f];
+        } else {
+          obj[f] = o[f];
+        }
+      });
+      return obj;
+    });
+    cb(res);
   });
 }
