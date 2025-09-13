@@ -5,8 +5,8 @@ const bottom = 56896; //highest ccNum I currently have
 module.exports = function filterCollection(cb) {
   
   if (fs.existsSync('work/collection.json')) {
-		let collection = JSON.parse(fs.readFileSync('work/collection.json')).collection.methodSet;
-    let methodlist = JSON.parse(fs.readFileSync('src/methodlist.json'));
+	let collection = JSON.parse(fs.readFileSync('work/collection.json')).collection.methodSet;
+    
     
     let i = collection.length-1;
     while (i >= 0) {
