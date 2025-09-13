@@ -35,8 +35,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => {
-  connect();
+  
   response.sendFile(__dirname + "/views/index.html");
+  connect();
 });
 
 app.get("/towers", (request, response) => {
