@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
+//input "titles" has method titles and mongoose ids that correspond
 module.exports = function addIDs(method, titles) {
+  //potential keys: newtitle, title, performances
   let results = {};
   let t = titles.findIndex(i => i.title.toLowerCase() === method.title.toLowerCase());
   if (t >= 0) {
