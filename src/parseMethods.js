@@ -16,6 +16,9 @@ module.exports = function parseMethods(filter, cb) {
       next('work/collection.json');
     }
     
+  } else {
+    console.log("no collection");
+    cb({methods: []});
   }
   //use the appropriate json file to parse methods
   function next(path) {
