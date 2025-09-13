@@ -4,6 +4,7 @@
 
 var methodfile;
 var updateresults;
+var shortmethods;
 
 
 $(function() {
@@ -15,13 +16,31 @@ $(function() {
 
 
 function triggerdownload() {
+  let keys = ["title", "stage", "class", "leadLength", "leadHeadCode", "pnFull", "huntBells", "pbOrder"];
+  let mapping = {
+    title: "name",
+    huntBells: "hunts",
+    pnFull: "plainPN"
+  };
   let url = "/download?secret="+ $("#secret").val();
   $("#download").children().remove();
   $("#download").append(`<p id="loading">sending...</p>`);
   fetch(url)
   .then(response => response.json())
   .then(res => {
-    updateresults = JSON.stringify(res);
+    updateresults = [];
+    res.methods.forEach(m => {
+      let o = {};
+      keys.forEach(k => {
+        if (mapping[k]) {
+          o[mapping[k]] = m[k];
+        } else {
+          o[k] = m[k];
+        }
+      });
+      updateresults.push(o);
+    });
+    shortmethods = JSON.stringify(updateresults);
     $("#loading").text("done");
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
@@ -30,7 +49,7 @@ function triggerdownload() {
 
 function viewfile(e) {
   if (e.currentTarget.id === "viewresults") {
-    openfile(updateresults);
+    openfile(shortmethods);
   }
 }
 
