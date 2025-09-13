@@ -2,8 +2,13 @@ const connect = require('./mongoose/connect.js');
 const find = require('./find/findFields.js');
 
 var query = {
-  query: {stage: 4},
-  fields: "title stage class ccNum pnFull oldtitle"
+  query: {stage: {$gt: 3, $lt: 17}},
+  fields: "title stage class leadLength leadHeadCode pnFull huntBells pbOrder"
+};
+var mapping = {
+  title: "name",
+  huntBells: "hunts",
+  pnFull: "plainPN"
 };
 
 module.exports = function getmethods(cb) {
@@ -17,6 +22,8 @@ module.exports = function getmethods(cb) {
       fields.forEach(f => {
         if (f === "oldtitle") {
           if (o[f] && o[f].length) obj.oldtitle = o[f];
+        } else if (mapping[f]) {
+          obj[mapping[f]] = o[f];
         } else {
           obj[f] = o[f];
         }
