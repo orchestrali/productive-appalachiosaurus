@@ -42,7 +42,7 @@ function triggerdownload() {
       });
       updateresults.push(o);
     });
-    shortmethods = JSON.stringify(updateresults);
+    shortmethods = JSON.stringify(updateresults, null, 2);
     $("#loading").text("done, max cc id "+max);
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
