@@ -3,6 +3,7 @@
 
 
 var methodfile;
+var updateresults;
 
 
 $(function() {
@@ -18,9 +19,19 @@ function triggerdownload() {
   $("#download").children().remove();
   $("#download").append(`<p id="loading">sending...</p>`);
   fetch(url)
-  .then(response => {
+  .then(response => response.json())
+  .then(res => {
+    updateresults = res;
     $("#loading").text("done");
+    $("#download").append(`<button id="viewresults">view results</button>`);
+    $("#viewresults").on("click", viewfile);
   });
+}
+
+function viewfile(e) {
+  if (e.currentTarget.id === "viewresults") {
+    openfile(updateresults);
+  }
 }
 
 function getmethods() {
@@ -35,6 +46,16 @@ function getmethods() {
     $("#container").append(`<button id="getfile">get file</button>`);
     $("#getfile").on("click", downloadfile);
   });
+}
+
+function openfile(file) {
+  const a = document.createElement('a');
+  const blob = new Blob([file], {type: "text/plain"});
+  a.href = URL.createObjectURL(blob);
+  a.target = "_blank";
+  a.click();
+
+  URL.revokeObjectURL(a.href);
 }
 
 function downloadfile() {
