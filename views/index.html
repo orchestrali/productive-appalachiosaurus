@@ -8,18 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A cool thing made with Glitch">
 
-    <title>Welcome to Glitch!</title>
+    <title>Alison's databases</title>
 
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/style.css">
 
-    <!-- import the webpage's client-side javascript file -->
-    <script src="/script.js" defer></script>
+    
   </head>
   <body>
     <header>
-      <h1>A Dream of the Future</h1>
+      <h1>Methods</h1>
     </header>
 
     <main>
@@ -28,25 +27,102 @@
       <p>Tell me your hopes and dreams:</p>
 
       <form>
+        <ul>
+          <label>
+            <input type="checkbox" name="title" />method title
+          </label>
+          <label>
+            <input type="checkbox" name="oldtitle" />previous titles of the method
+          </label>
+          <label>
+            <input type="checkbox" name="name" />method name (portion before class and stage)
+          </label>
+          <label>
+            <input type="checkbox" name="stage" />stage
+          </label>
+          <label>
+            <input type="checkbox" name="classification" />four properties: little, differential, plain, treble dodging
+          </label>
+          <label>
+            <input type="checkbox" name="class" />method class
+          </label>
+          <label>
+            <input type="checkbox" name="leadLength" />lead length
+          </label>
+          <label>
+            <input type="checkbox" name="leadHead" />leadhead
+          </label>
+          <label>
+            <input type="checkbox" name="leadHeadCode" />leadhead code
+          </label>
+          <label>
+            <input type="checkbox" name="numHunts" />how many hunt bells
+          </label>
+          <label>
+            <input type="checkbox" name="huntBells" />hunt bells
+          </label>
+          <label>
+            <input type="checkbox" name="huntPath" />path of primary hunt bell
+          </label>
+          <label>
+            <input type="checkbox" name="stationaryBells" />stationary bells
+          </label>
+          <label>
+            <input type="checkbox" name="numWorking" />how many working bells
+          </label>
+          <label>
+            <input type="checkbox" name="pbOrder" />place bell order(s)
+          </label>
+          <label>
+            <input type="checkbox" name="leadsInCourse" />leads in course
+          </label>
+          <label>
+            <input type="checkbox" name="maxBlows" />maximum consecutive blows in the same place
+          </label>
+          <label>
+            <input type="checkbox" name="fchGroups" />false coursehead groups
+          </label>
+          <label>
+            <input type="checkbox" name="symmetry" />symmetry
+          </label>
+          <label>
+            <input type="checkbox" name="pn" />place notation
+          </label>
+          <label>
+            <input type="checkbox" name="pnFull" />full place notation in my format
+          </label>
+          <label>
+            <input type="checkbox" name="leadtruth" />true leads
+          </label>
+          <label>
+            <input type="checkbox" name="coursetruth" />true plain course
+          </label>
+          <label>
+            <input type="checkbox" name="ccNum" />complib id
+          </label>
+          <label>
+            <input type="checkbox" name="notes" />notes
+          </label>
+        </ul>
         <label>
           New Dream
           <input name="dream" type="text" maxlength="100" required placeholder="Dreams!">
         </label>
-        <button type="submit" id="submit-dream">Add Dream</button>
+        <button type="submit" id="submit">submit</button>
       </form>
 
       <section class="dreams">
-        <ul id="dreams">
+        <p id="dreams">
           <em>loading dreams&hellip;</em>
-        </ul>
+        </p>
       </section>
     </main>
 
-    <footer>Made with <a href="https://glitch.com">Glitch</a>!</footer>
-
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:2em;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js" defer></script>
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+    <!-- import the webpage's client-side javascript file -->
+    <script src="/script.js"></script>
   </body>
 </html>
