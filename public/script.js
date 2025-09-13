@@ -21,7 +21,7 @@ function triggerdownload() {
   fetch(url)
   .then(response => response.json())
   .then(res => {
-    updateresults = res;
+    updateresults = JSON.stringify(res);
     $("#loading").text("done");
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
