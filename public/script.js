@@ -18,8 +18,9 @@ function getmethods() {
   $("#container").children().remove();
   $("#container").append(`<p>loading file...</p>`);
   fetch("/methods")
-  .then(response => {
-    methodfile = response;
+  .then(response => response.json())
+  .then(methods => {
+    methodfile = JSON.stringify(methods);
     // remove the loading text
     $("#container").children().remove();
     $("#container").append(`<button id="getfile">get file</button>`);
