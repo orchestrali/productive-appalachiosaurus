@@ -25,11 +25,13 @@ function triggerdownload() {
   let url = "/download?secret="+ $("#secret").val();
   $("#download").children().remove();
   $("#download").append(`<p id="loading">sending...</p>`);
+  let max = 50000;
   fetch(url)
   .then(response => response.json())
   .then(res => {
     updateresults = [];
     res.methods.forEach(m => {
+      max = Math.max(max, m.ccNum);
       let o = {};
       keys.forEach(k => {
         if (mapping[k]) {
@@ -41,7 +43,7 @@ function triggerdownload() {
       updateresults.push(o);
     });
     shortmethods = JSON.stringify(updateresults);
-    $("#loading").text("done");
+    $("#loading").text("done, max cc id "+max);
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
   });
