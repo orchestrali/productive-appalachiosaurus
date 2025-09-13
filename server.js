@@ -56,7 +56,11 @@ app.get("/methods", (request, response) => {
 
 app.get("/download", (request, response) => {
   if (request.query.secret === process.env.SECRET) {
-    updatefiles(() => {});
+    updatefiles(() => {
+      response.send("done");
+    });
+  } else {
+    response.send("bad secret");
   }
 });
 
