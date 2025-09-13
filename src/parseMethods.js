@@ -36,6 +36,7 @@ module.exports = function parseMethods(filter, cb) {
       notes.push(...res.notes);
     }
     console.log("methods: "+methods.length);
+    /* //doing this part twice!
     let s = new stream.Readable();
     let str = JSON.stringify(methods, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     s.push(str);
@@ -44,6 +45,7 @@ module.exports = function parseMethods(filter, cb) {
       console.log("methods written to work directory");
       //cb();
     });
+    */
     if (!filter) {
       connect();
       find("title", {type: "method"}, (titles) => {
