@@ -22,7 +22,7 @@ module.exports = function router(download, filter, cb) {
     
     parseMethods(filter, (res) => {
       console.log(res.methods.length + " methods");
-      cb(res);
+      addStuff(res);
     });
 
     function addStuff(res) {
@@ -34,7 +34,7 @@ module.exports = function router(download, filter, cb) {
           addStuff(res);
         } else {
           console.log("finished???");
-          cb(res.notes);
+          cb(res);
         }
       });
     }
