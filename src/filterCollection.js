@@ -1,6 +1,6 @@
 const fs = require('fs');
 const stream = require('stream');
-const bottom = 56896; //highest ccNum I currently have
+const bottom = 57568; //highest ccNum I currently have
 
 module.exports = function filterCollection(cb) {
   
