@@ -21,6 +21,7 @@ const update = require('./src/temporary.js');
 const connect = require('./src/mongoose/connect.js');
 const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
+const router = require('./src/newrouter.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -56,8 +57,8 @@ app.get("/methods", (request, response) => {
 
 app.get("/download", (request, response) => {
   if (request.query.secret === process.env.SECRET) {
-    updatefiles(() => {
-      response.send("done");
+    router(true, true, (res) => {
+      response.send(res);
     });
   } else {
     response.send("bad secret");
