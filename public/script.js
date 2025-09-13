@@ -42,7 +42,7 @@ function triggerdownload() {
       });
       updateresults.push(o);
     });
-    shortmethods = JSON.stringify(updateresults, null, 2);
+    shortmethods = JSON.stringify(updateresults, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     $("#loading").text("done, max cc id "+max);
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
@@ -61,7 +61,7 @@ function getmethods() {
   fetch("/methods")
   .then(response => response.json())
   .then(methods => {
-    methodfile = JSON.stringify(methods, null, 2);
+    methodfile = JSON.stringify(methods, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     // remove the loading text
     $("#container").children().remove();
     $("#container").append(`<button id="getfile">get file</button>`);
