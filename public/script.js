@@ -3,7 +3,9 @@
 
 
 var methodfile;
+//holder for new methods added to database
 var updateresults;
+//stringified version
 var shortmethods;
 
 
@@ -14,7 +16,7 @@ $(function() {
 });
 
 
-
+//tell server to download method file and process any new methods
 function triggerdownload() {
   let keys = ["title", "stage", "class", "leadLength", "leadHeadCode", "pnFull", "huntBells", "pbOrder"];
   let mapping = {
@@ -55,6 +57,7 @@ function viewfile(e) {
   }
 }
 
+//get current list of methods formatted for mini-instinctive-metal
 function getmethods() {
   $("#container").children().remove();
   $("#container").append(`<p>loading file...</p>`);
