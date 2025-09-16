@@ -3,7 +3,7 @@ const find = require('./find/findFields.js');
 
 var query = {
   query: {stage: {$gt: 3, $lt: 17}},
-  fields: "title stage class leadLength leadHeadCode pnFull huntBells pbOrder"
+  fields: "title stage class leadLength leadHeadCode pnFull huntBells pbOrder ccNum"
 };
 var mapping = {
   title: "name",
