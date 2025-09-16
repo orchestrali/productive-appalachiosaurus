@@ -80,7 +80,9 @@ function getmethods() {
     ccnums = JSON.stringify(cc, null, 2);
     stedmans.forEach(t => {
       let m = methods.find(o => o.name === t);
+      let other = methods.find(o => o.name === "Reverse "+t);
       m.stedman = true;
+      if (other) other.stedman = true;
     });
     methodfile = JSON.stringify(methods, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     // remove the loading text
