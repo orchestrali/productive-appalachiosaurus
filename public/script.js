@@ -10,6 +10,8 @@ var updateresults;
 //stringified version
 var shortmethods;
 
+var stedmanstages = ["Doubles","Triples","Caters","Cinques","Sextuples","Septuples"];
+const stedmans = stedmanstages.map(s => "Stedman "+s);
 
 $(function() {
   console.log("hello world :o");
@@ -76,6 +78,10 @@ function getmethods() {
     methodnamelist = JSON.stringify(namelist, null, 2);
     let cc = methods.map(o => o.ccNum).sort((a,b) => a-b);
     ccnums = JSON.stringify(cc, null, 2);
+    stedmans.forEach(t => {
+      let m = methods.find(o => o.name === t);
+      m.stedman = true;
+    });
     methodfile = JSON.stringify(methods, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     // remove the loading text
     $("#container").children().remove();
