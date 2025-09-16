@@ -1,5 +1,6 @@
 const fs = require('fs');
 const stream = require('stream');
+const existing = require('./ccnumlist.json');
 const bottom = 57568; //highest ccNum I currently have
 
 module.exports = function filterCollection(cb) {
@@ -11,7 +12,7 @@ module.exports = function filterCollection(cb) {
     let i = collection.length-1;
     while (i >= 0) {
       if (Array.isArray(collection[i].method)) {
-        collection[i].method = collection[i].method.filter(o => Number(o.id.slice(1)) > bottom);
+        collection[i].method = collection[i].method.filter(o => !existing.includes(Number(o.id.slice(1))));
         if (collection[i].method.length === 0) {
           collection.splice(i, 1);
           console.log("methodSet "+(i+1)+", no new methods");
@@ -19,7 +20,7 @@ module.exports = function filterCollection(cb) {
           console.log("methodSet "+(i+1)+", num new methods: "+collection[i].method.length);
         }
       } else {
-        if (Number(collection[i].method.id.slice(1)) <= bottom) {
+        if (existing.includes(Number(collection[i].method.id.slice(1)))) {
           collection.splice(i, 1);
           console.log("methodSet "+(i+1)+", no new methods");
         } else {
