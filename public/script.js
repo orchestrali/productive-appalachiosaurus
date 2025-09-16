@@ -1,7 +1,9 @@
 // client-side js, loaded by index.html
 // run by the browser each time the page is loaded
 
-
+var ccnums;
+var methodnamelist;
+//complete method file for changeringing.net
 var methodfile;
 //holder for new methods added to database
 var updateresults;
@@ -52,8 +54,14 @@ function triggerdownload() {
 }
 
 function viewfile(e) {
-  if (e.currentTarget.id === "viewresults") {
-    openfile(shortmethods);
+  let files = {
+    viewresults: shortmethods,
+    namelist: methodnamelist,
+    numlist: ccnums
+  };
+  let file = files[e.currentTarget.id];
+  if (file) {
+    openfile(file);
   }
 }
 
@@ -64,11 +72,24 @@ function getmethods() {
   fetch("/methods")
   .then(response => response.json())
   .then(methods => {
+    let namelist = buildnamelist(methods);
+    methodnamelist = JSON.stringify(namelist, null, 2);
+    let cc = methods.map(o => o.ccNum).sort((a,b) => a-b);
+    ccnums = JSON.stringify(cc, null, 2);
     methodfile = JSON.stringify(methods, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     // remove the loading text
     $("#container").children().remove();
-    $("#container").append(`<button id="getfile">get file</button>`);
+    let buttons = {
+      getfile: "get big method file",
+      namelist: "get method names",
+      numlist: "get ccNum list"
+    };
+    for (let key in buttons) {
+      let c = key === "getfile" ? "" : ` class="open"`;
+      $("#container").append(`<button id="${key}"${c}>${buttons[key]}</button>`);
+    }
     $("#getfile").on("click", downloadfile);
+    $(".open").on("click", viewfile);
   });
 }
 
@@ -90,4 +111,40 @@ function downloadfile() {
   a.click();
 
   URL.revokeObjectURL(a.href);
+}
+
+function buildnamelist(arr) {
+  let res = [];
+  arr.forEach(m => {
+    let so = res.find(o => o.stage === m.stage);
+    if (so) {
+      let co = so.classes.find(o => o.class === m.class);
+      if (co) {
+        if (co.methods.includes(m.name)) {
+          console.log("duplicate: "+m.name);
+        } else {
+          co.methods.push(m.name);
+        }
+      } else {
+        co = {
+          class: m.class,
+          methods: [m.name]
+        };
+        so.classes.push(co);
+      }
+    } else {
+      let o = {
+        stage: m.stage,
+        classes: [
+          {
+            class: m.class,
+            methods: [m.name]
+          }
+        ]
+      };
+      res.push(o);
+    }
+  });
+  res.sort((a,b) => a.stage - b.stage);
+  return res;
 }
