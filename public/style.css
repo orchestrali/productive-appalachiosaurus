@@ -29,7 +29,12 @@ input {
   border: 1px solid silver;
   font-size: 16px;
   margin-bottom: 10px;
+  margin-right: 5px;
   padding: 5px;
+}
+
+input.text {
+  margin-right: 0;
   width: 100%;
 }
 
