@@ -48,6 +48,10 @@ button:hover {
   background-color: lavender;
 }
 
+ul {
+  list-style-type: none;
+}
+
 footer {
   margin-top: 3em;
   padding-top: 1.5em;
