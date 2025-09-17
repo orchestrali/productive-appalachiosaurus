@@ -75,8 +75,9 @@ function getccnums() {
   $("#container").append(`<p>loading file...</p>`);
   fetch("/ccnums")
   .then(response => response.json())
-  .then(ccnums => {
-    let cc = ccnums.map(o => o.ccNum).sort((a,b) => a-b);
+  .then(numlist => {
+    console.log(numlist[0]);
+    let cc = numlist.map(o => o.ccNum).sort((a,b) => a-b);
     ccnums = JSON.stringify(cc, null, 2);
     $("#container").children().remove();
     $("#container").append(`<button id="numlist">get ccNum list</button>`);
