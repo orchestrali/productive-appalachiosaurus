@@ -52,7 +52,7 @@ function triggerdownload() {
     });
     shortmethods = JSON.stringify(updateresults, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
     $("#loading").text("done, "+nums.length+" new methods");
-    $("#download").append(`<ul>${nums.map(n => "<li>"+n+",</li>")}</ul>`);
+    $("#download").append(`<ul>${nums.map(n => "<li>"+n+",</li>").join("")}</ul>`);
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
   });
