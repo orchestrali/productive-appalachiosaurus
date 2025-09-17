@@ -22,8 +22,9 @@ module.exports = function router(download, filter, cb) {
     
     parseMethods(filter, (res) => {
       console.log(res.methods.length + " methods");
-      res.methods.forEach(m => save.methods.push(m));
-      addStuff(res);
+      cb(res);
+      //res.methods.forEach(m => save.methods.push(m));
+      //addStuff(res);
     });
 
     function addStuff(res) {
