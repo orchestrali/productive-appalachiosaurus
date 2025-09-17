@@ -19,6 +19,7 @@ const separate = require('./src/separate.js');
 const update = require('./src/temporary.js');
 */
 const connect = require('./src/mongoose/connect.js');
+const find = require('./src/find/findFields.js');
 const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
@@ -50,6 +51,15 @@ app.get("/towers", (request, response) => {
 app.get("/methods", (request, response) => {
   if (db) {
     getmethods((res) => {
+      response.send(res);
+    });
+  }
+});
+
+app.get("/ccnums", (request, response) => {
+  if (db) {
+    let query = {query: {}, fields: "ccNum"};
+    find("method", query, (res) => {
       response.send(res);
     });
   }
