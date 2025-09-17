@@ -16,13 +16,14 @@ const stedmans = stedmanstages.map(s => "Stedman "+s);
 $(function() {
   console.log("hello world :o");
   $("#getmethods").on("click", getmethods);
+  $("#getccnums").on("click", getccnums);
   $("#downloadfiles").on("click", triggerdownload);
 });
 
 
 //tell server to download method file and process any new methods
 function triggerdownload() {
-  let keys = ["title", "stage", "class", "leadLength", "leadHeadCode", "pnFull", "huntBells", "pbOrder"];
+  let keys = ["title", "stage", "class", "leadLength", "leadHeadCode", "pnFull", "huntBells", "pbOrder", "ccNum"];
   let mapping = {
     title: "name",
     huntBells: "hunts",
@@ -31,13 +32,14 @@ function triggerdownload() {
   let url = "/download?secret="+ $("#secret").val();
   $("#download").children().remove();
   $("#download").append(`<p id="loading">sending...</p>`);
+  let nums = [];
   let max = 50000;
   fetch(url)
   .then(response => response.json())
   .then(res => {
     updateresults = [];
     res.methods.forEach(m => {
-      max = Math.max(max, m.ccNum);
+      nums.push(m.ccNum);
       let o = {};
       keys.forEach(k => {
         if (mapping[k]) {
@@ -49,7 +51,8 @@ function triggerdownload() {
       updateresults.push(o);
     });
     shortmethods = JSON.stringify(updateresults, null, 2).replace(/\n      +/g, "").replace(/\n    \]/g, "]");
-    $("#loading").text("done, max cc id "+max);
+    $("#loading").text("done, "+nums.length+" new methods");
+    $("#download").append(`<ul>${nums.map(n => "<li>"+n+",</li>")}</ul>`);
     $("#download").append(`<button id="viewresults">view results</button>`);
     $("#viewresults").on("click", viewfile);
   });
@@ -67,6 +70,20 @@ function viewfile(e) {
   }
 }
 
+function getccnums() {
+  $("#container").children().remove();
+  $("#container").append(`<p>loading file...</p>`);
+  fetch("/ccnums")
+  .then(response => response.json())
+  .then(ccnums => {
+    let cc = ccnums.map(o => o.ccNum).sort((a,b) => a-b);
+    ccnums = JSON.stringify(cc, null, 2);
+    $("#container").children().remove();
+    $("#container").append(`<button id="numlist">get ccNum list</button>`);
+    $("#numlist").on("click", viewfile);
+  });
+}
+
 //get current list of methods formatted for mini-instinctive-metal
 function getmethods() {
   $("#container").children().remove();
@@ -77,7 +94,7 @@ function getmethods() {
     let namelist = buildnamelist(methods);
     methodnamelist = JSON.stringify(namelist, null, 2);
     let cc = methods.map(o => o.ccNum).sort((a,b) => a-b);
-    ccnums = JSON.stringify(cc, null, 2);
+    
     stedmans.forEach(t => {
       let m = methods.find(o => o.name === t);
       let other = methods.find(o => o.name === "Reverse "+t);
@@ -90,7 +107,7 @@ function getmethods() {
     let buttons = {
       getfile: "get big method file",
       namelist: "get method names",
-      numlist: "get ccNum list"
+      //numlist: "get ccNum list"
     };
     for (let key in buttons) {
       let c = key === "getfile" ? "" : ` class="open"`;
