@@ -3,7 +3,7 @@ const addNest = require('./addNest.js');
 const lexer = require('./lexer.js');
 const newnames = require('../newnames.js');
 const handlePerform = require('./handlePerform.js');
-const keysP = ['firstTowerbellPeal', 'firstHandbellPeal', 'firstTowerbellExtent', 'firstHandbellExtent', 'firstInclusionInTowerbellPeal', 'firstInclusionInHandbellPeal']
+const keysP = ['firstTowerbellPeal', 'firstHandbellPeal', 'firstKeyboardPeal', 'firstKeyboardExtent', 'firstTowerbellExtent', 'firstHandbellExtent', 'firstInclusionInTowerbellPeal', 'firstInclusionInHandbellPeal', 'firstInclusionInKeyboardPeal', 'firstKeyboardQuarterPeal', 'firstTowerbellQuarterPeal', 'firstHandbellQuarterPeal', 'firstInclusionInTowerbellQuarterPeal', 'firstInclusionInHandbellQuarterPeal', 'firstInclusionInKeyboardQuarterPeal']
 const keysP2 = ['date', 'id', 'location', 'numberOfChanges', 'society', 'conductor']
 
 //items not in methodSet props: title, name, notation, ccNum, refs, performances, notes
