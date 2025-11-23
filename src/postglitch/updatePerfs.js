@@ -14,7 +14,22 @@ module.exports = function updateperfs() {
 
     //next get some performances
     let pq = {methodTitle: {$exists: false}}; //probably want more filter than that
-    find("performance", pq, (perfs) => {});
+    find("performance", pq, (perfs) => {
+      console.log(perfs.length + " performances");
+      let stop = Math.min(200, perfs.length);
+      let i = 0;
+      let problemcount = 0;
+      perfs.forEach(p => {
+        let t = idindex[p.method];
+        t ? p.methodTitle = t : problemcount++;
+      });
+
+      console.log("problemcount: "+problemcount);
+
+      function updateloop() {
+        //wait on this... 
+      }
+    });
     
   });
   
