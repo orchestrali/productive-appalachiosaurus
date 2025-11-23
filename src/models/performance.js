@@ -23,6 +23,7 @@ var performanceSchema = new Schema({
   bbNum: Number
 });
 
-//type should be enum but given as string in case I don't know all the enum possibilities ["firstHandbellPeal", "firstInclusionInTowerbellPeal", "firstTowerbellExtent", "firstTowerbellPeal", "firstInclusionInHandbellPeal"]
+//type should be enum but given as string in case I don't know all the enum possibilities 
+//["firstHandbellPeal", "firstInclusionInTowerbellPeal", "firstTowerbellExtent", "firstTowerbellPeal", "firstInclusionInHandbellPeal", "firstKeyboardQuarterPeal", "firstInclusionInTowerbellQuarterPeal", "firstInclusionInHandbellQuarterPeal", "firstInclusionInKeyboardQuarterPeal", "firstInclusionInKeyboardPeal"]
 
 module.exports = mongoose.model('performance', performanceSchema);
