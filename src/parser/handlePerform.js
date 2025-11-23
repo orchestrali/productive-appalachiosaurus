@@ -7,10 +7,8 @@ module.exports = function handlePerform(p, tokens, err) {
   for (var i = 0; i < tokens.length; i++) {
     let discarded = [];
     
-    if (tokens[i].name == 'society') {
+    if (text.indexOf(tokens[i].name) > -1) {
       p[tokens[i].name] = tokens[i].value.replace(/&amp;/gi, "&");
-    } else if (text.indexOf(tokens[i].name) > -1) {
-      p[tokens[i].name] = tokens[i].value;
     } else if (tokens[i].name == 'numberOfChanges') {
       p.numberOfChanges = Number(tokens[i].value);
     } else if (tokens[i].name == 'id') {
