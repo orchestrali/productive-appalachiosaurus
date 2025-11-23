@@ -32,8 +32,8 @@ module.exports = function updateperfs() {
         }
       });
 
-      console.log("problemcount: "+(perfs.length-filtered.length));
-      let stop = Math.min(500, filtered.length);
+      //console.log("problemcount: "+(perfs.length-filtered.length));
+      let stop = Math.min(2000, filtered.length);
       let i = 0;
 
       updateloop();
