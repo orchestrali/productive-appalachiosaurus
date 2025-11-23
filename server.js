@@ -77,9 +77,12 @@ app.get("/download", (request, response) => {
   }
 });
 
+var time;
 app.get("/testing", (request, response) => {
   response.send("OK");
-  if (!db) {
+  let now = Date.now();
+  if (!time || now-time > 60000) {
+    time = now;
     db = connect();
     testfunction();
   } else {
