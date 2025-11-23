@@ -30,6 +30,7 @@ module.exports = function addIDs(method, titles) {
   if (method.performances) {
     for (let i = 0; i < method.performances.length; i++) {
       method.performances[i].method = method._id; 
+      method.performances[i].methodTitle = method.title;
       method.performances[i]._id = new mongoose.Types.ObjectId();
       ids.push(method.performances[i]._id);
       performances.push(method.performances[i]);
