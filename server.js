@@ -79,8 +79,12 @@ app.get("/download", (request, response) => {
 
 app.get("/testing", (request, response) => {
   response.send("OK");
-  db = connect();
-  testfunction();
+  if (!db) {
+    db = connect();
+    testfunction();
+  } else {
+    console.log("already going? or already went?");
+  }
 });
 
 //old thing:
