@@ -23,6 +23,7 @@ const find = require('./src/find/findFields.js');
 const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
+const testfunction = require('./src/postglitch/updatePerfs.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -76,6 +77,13 @@ app.get("/download", (request, response) => {
   }
 });
 
+app.get("/testing", (request, response) => {
+  response.send("OK");
+  db = connect();
+  testfunction();
+});
+
+//old thing:
 let methods = false;
 app.get('/'+process.env.SECRET, function(request, response) {
   console.log(request.query);
