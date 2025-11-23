@@ -7,7 +7,8 @@ const find = require("../find/find.js");
 //I want to fix ampersands
 //and add methodTitles to performances
 module.exports = function updateperfs() {
-  //connect here?
+  //need to be connected
+  console.log("starting updateperfs");
 
   let q = {query: {performances: {$not: {$size: 0}}}, fields: "title"};
   findFields("method", q, (res) => {
@@ -35,9 +36,24 @@ module.exports = function updateperfs() {
       let stop = Math.min(200, filtered.length);
       let i = 0;
 
+      updateloop();
+
       function updateloop() {
         let p = filtered[i];
-        p.save().then(); // .........
+        p.save().then((r) => {
+          i++;
+          if (i < stop) {
+            updateloop();
+          } else {
+            console.log("finished with this batch?");
+          }
+        })
+        .catch((o) => {
+          console.log("error in updateloop");
+          console.log(i);
+          console.log(p);
+          console.log(typeof o);
+        });
       }
     });
     
