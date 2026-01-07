@@ -9,6 +9,11 @@ module.exports = function handlePerform(p, tokens, err) {
     
     if (text.indexOf(tokens[i].name) > -1) {
       p[tokens[i].name] = tokens[i].value;
+      if (tokens[i].name === "location") {
+        for (let key in p.location) {
+          p.location[key] = p.location[key].replace(/&amp;/g, "&");
+        }
+      }
         //.replace(/&amp;/g, "&");
     } else if (tokens[i].name == 'numberOfChanges') {
       p.numberOfChanges = Number(tokens[i].value);
