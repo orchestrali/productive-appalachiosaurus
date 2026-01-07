@@ -22,7 +22,7 @@ module.exports = function parseMethods(filter, cb) {
   }
   //use the appropriate json file to parse methods
   function next(path) {
-    let collection = JSON.parse(fs.readFileSync(path));
+    let collection = JSON.parse(fs.readFileSync(path).replace(/&amp;/g, "&"));
     if (!filter) collection = collection.collection.methodSet;
     
     let methods = [];
