@@ -1,4 +1,9 @@
 
+body {
+  display: flex;
+  min-width: 1300px;
+  margin: 0 8px;
+}
 
 table {
   border-collapse: collapse;
@@ -9,6 +14,43 @@ th, td {
   border: 1px solid black;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .notapplicable {
   background-color: #dddddd;
+}
+
+.selected {
+  background-color: skyblue;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+div.table {
+  min-width: 800px;
+  margin-right: 50px;
+}
+
+#border {
+  width: 8px;
+  background-color: navy;
+}
+
+#methodcolumn {
+  padding: 10px;
+  width: 400px;
+}
+
+#methodcontainer {
+  max-height: 600px;
+  overflow: scroll;
+}
+
+#methodcontainer h4 {
+  margin-left: 40px;
 }
