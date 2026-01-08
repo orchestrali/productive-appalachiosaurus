@@ -8,32 +8,37 @@ const pagestart = [`<head>
   </script>
 </head>
 <body>
-<h2>Single hunt methods</h2>
-<div>
-  <h3>Plain hunt paths</h3>
-  <table id="singleplain">
-    <thead>
-      <tr>
-        <th rowspan="2">hunt on</th>
-        <th rowspan="2">lowest place</th>
-        <th rowspan="2">bell/start</th>
-        <th rowspan="2">right/wrong</th>
-        <th colspan="14">number of methods by stage</th>
-      </tr>
-      <tr>
-        <th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th>
-        <th>total</th>
-      </tr>
-    </thead>
-    <tbody>
+<div id="tablecolumn">
+  <h2>Single hunt methods</h2>
+  <div>
+    <h3>Plain hunt paths</h3>
+    <table id="singleplain">
+      <thead>
+        <tr>
+          <th rowspan="2">hunt on</th>
+          <th rowspan="2">lowest place</th>
+          <th rowspan="2">bell/start</th>
+          <th rowspan="2">right/wrong</th>
+          <th colspan="14">number of methods by stage</th>
+        </tr>
+        <tr>
+          <th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th>
+          <th>total</th>
+        </tr>
+      </thead>
+      <tbody>
 `];
 const pageend = `
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
-<div id="methodcontainer">
-  <ul></ul>
-  <button id="closecontainer">Close</button>
+<div id="border"></div>
+<div id="methodcolumn">
+  <div id="methodcontainer">
+    <h4>Methods</h4>
+    <ul></ul>
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script src="scripthunt.js"></script>
