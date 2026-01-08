@@ -44,7 +44,7 @@ module.exports = function buildhuntpaths(cb) {
     query: {
       "classification.plain": true,
       numHunts: 1,
-      stage: {$and: [{$gt: 3},{$lte: 16}]}
+      stage: {$gt: 3, $lt: 17}
     }
   };
 
