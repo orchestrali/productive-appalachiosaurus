@@ -24,6 +24,7 @@ const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
 const testfunction = require('./src/postglitch/updatePerfs.js');
+const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -43,6 +44,10 @@ app.get("/", (request, response) => {
   
   response.sendFile(__dirname + "/views/index.html");
   db = connect();
+});
+
+app.get("/hunts", (request, response) => {
+  buildhuntpaths(page => response.send(page));
 });
 
 app.get("/towers", (request, response) => {
