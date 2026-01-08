@@ -8,7 +8,13 @@ const keysP2 = ['date', 'id', 'location', 'numberOfChanges', 'society', 'conduct
 
 //items not in methodSet props: title, name, notation, ccNum, refs, performances, notes
 module.exports = function handleMethod(method, tokens, err) {
-  
+  let titlet = tokens.find(t => t.name === "title");
+  let title;
+  if (!titlet) {
+    console.log("no method title????");
+  } else {
+    title = titlet.value.replace(/&amp;/gi, "&");
+  }
   for (var i = 0; i < tokens.length; i++) {
     if (tokens[i].name === "title") {
       let names = newnames.find(o => o.newtitle == tokens[i].value);
@@ -30,7 +36,7 @@ module.exports = function handleMethod(method, tokens, err) {
       let pArr = [];
       for (var j = 0; j < perfs.length; j++) {
         let pTokens = lexer(perfs[j].value, keysP2);
-        let p = {type: perfs[j].name}; 
+        let p = {type: perfs[j].name, methodTitle: title}; 
         pArr.push(handlePerform(p, pTokens, err));
       }
       method.performances = pArr;
