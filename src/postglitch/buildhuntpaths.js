@@ -31,6 +31,10 @@ const pageend = `
     </tbody>
   </table>
 </div>
+<div id="methodcontainer">
+  <ul></ul>
+  <button id="closecontainer">Close</button>
+</div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script src="scripthunt.js"></script>
 </body>
@@ -46,7 +50,7 @@ var huntpaths = {
 //get methods and analyze their hunt paths
 module.exports = function buildhuntpaths(cb) {
   let query = {
-    fields: "title stage huntPath",
+    fields: "title stage huntPath ccNum",
     query: {
       "classification.plain": true,
       numHunts: 1,
@@ -55,7 +59,7 @@ module.exports = function buildhuntpaths(cb) {
   };
 
   findFields("method", query, (res) => {
-    res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage));
+    res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage, m.ccNum));
     let tbody = buildsingleplaintable();
     let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
     let page = pagestart[0] + str + pagestart[1] + tbody + pageend;
@@ -96,7 +100,13 @@ function buildsingleplaintable() {
         tr += `<td class="notapplicable"></td>`;
       } else {
         let n = mm.filter(m => m.stage === s).length;
-        tr += `<td>${n}</td>`;
+        let c = "";
+        let id = "";
+        if (n > 0) {
+          id = ` id="${p+"-"+s}"`;
+          c = ` class="clickable"`;
+        }
+        tr += `<td${id}${c}>${n}</td>`;
       }
     }
     tr += `<td>${mm.length}</td></tr>
@@ -107,7 +117,7 @@ function buildsingleplaintable() {
 }
 
 //plain methods with one hunt bell
-function analyzesingleplain(path, title, stage) {
+function analyzesingleplain(path, title, stage, num) {
   let arr = [];
   let used = listplaces(path);
   arr.push(used.length); // hunt on n places
@@ -116,7 +126,7 @@ function analyzesingleplain(path, title, stage) {
   arr.push(checkrightwrong(path));
   let key = arr.join("-");
   let o = huntpaths.single.plain[key];
-  let m = {title: title, stage: stage};
+  let m = {title: title, stage: stage, ccnum: num};
   if (o) {
     o.methods.push(m);
   } else {
