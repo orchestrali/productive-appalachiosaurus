@@ -88,7 +88,7 @@ function buildsingleplaintable() {
       if (max > s) {
         tr += `<td class="notapplicable"></td>`;
       } else {
-        let n = mm.filter(m => m.stage === s);
+        let n = mm.filter(m => m.stage === s).length;
         tr += `<td>${n}</td>`;
       }
     }
