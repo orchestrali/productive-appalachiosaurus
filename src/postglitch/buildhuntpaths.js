@@ -67,6 +67,7 @@ module.exports = function buildhuntpaths(cb) {
     console.log(res.length + " single hunt plain methods");
     res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage, m.ccNum));
     let tbody = buildsingleplaintable();
+    console.log(huntpaths.single.plain["13-1-1-r"].methods);
     let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
     let page = pagestart[0] + str + pagestart[1] + tbody + pageend;
     cb(page);
