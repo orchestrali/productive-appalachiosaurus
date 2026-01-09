@@ -94,7 +94,11 @@ function buildsingleplaintable() {
   paths.forEach(p => {
     let mm = huntpaths.single.plain[p].methods;
     
-    mm.sort((a,b) => a.stage-b.stage);
+    mm.sort((a,b) => {
+      let sd = a.stage-b.stage;
+      if (sd != 0) return sd;
+      return a.title.localeCompare(b.title);
+    });
     let arr = p.split("-");
     let max = Number(arr[1])+Number(arr[0])-1;
     let tr = `<tr><td>${arr.join(`</td><td>`)}`;
@@ -114,6 +118,7 @@ function buildsingleplaintable() {
         tr += `<td${id}${c}>${n}</td>`;
       }
     }
+    //making totals clickable is different...
     tr += `<td>${mm.length}</td></tr>
     `;
     trr += tr;
