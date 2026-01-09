@@ -34,6 +34,7 @@ ul {
 div.table {
   min-width: 800px;
   margin-right: 50px;
+  margin-bottom: 30px;
 }
 
 #border {
@@ -47,6 +48,7 @@ div.table {
 }
 
 #methodcontainer {
+  position: fixed;
   max-height: 600px;
   overflow: scroll;
 }
