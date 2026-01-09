@@ -10,7 +10,7 @@ const pagestart = [`<head>
 <body>
 <div id="tablecolumn">
   <h2>Single hunt methods</h2>
-  <div>
+  <div class="table">
     <h3>Plain hunt paths</h3>
     <table id="singleplain">
       <thead>
