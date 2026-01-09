@@ -4,6 +4,7 @@ var huntpaths;
 
 
 $(function() {
+  console.log(window.huntpaths.single.plain["13-1-1-r"].methods);
   huntpaths = window.huntpaths;
   $(".clickable").on("click", clicktablecell);
 });
