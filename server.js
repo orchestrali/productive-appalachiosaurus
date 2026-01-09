@@ -30,7 +30,9 @@ const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var db;
+var db = connect();
+var huntpage;
+buildhuntpaths(page => huntpage = page);
 //updatefiles(() => {});
 //buildlocal();
 //separate();
@@ -43,11 +45,15 @@ var db;
 app.get("/", (request, response) => {
   
   response.sendFile(__dirname + "/views/index.html");
-  db = connect();
+  
 });
 
 app.get("/hunts", (request, response) => {
-  buildhuntpaths(page => response.send(page));
+  if (huntpage) {
+    response.send(huntpage);
+  } else {
+    response.send("try again in a minute");
+  }
 });
 
 app.get("/towers", (request, response) => {
