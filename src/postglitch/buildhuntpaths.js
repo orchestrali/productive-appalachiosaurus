@@ -1,3 +1,4 @@
+const places = "1234567890ETABCD";
 const findFields = require("../find/findFields.js");
 const pagestart = [`<head>
   <title>Hunt bell paths</title>
