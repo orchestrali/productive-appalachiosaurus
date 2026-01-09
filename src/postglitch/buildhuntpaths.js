@@ -47,7 +47,8 @@ const pageend = `
 
 var huntpaths = {
   single: {
-    plain: {}
+    plain: {},
+    alliance: {}
   }
 };
 
@@ -62,19 +63,45 @@ module.exports = function buildhuntpaths(cb) {
       stage: {$gt: 3, $lt: 17}
     }
   };
+  let allianceq = {
+    fields: query.fields,
+    query: {
+      class: "Alliance",
+      numHunts: 1,
+      stage: {$gt: 3, $lt: 17}
+    }
+  };
 
   findFields("method", query, (res) => {
-    console.log(res.length + " single hunt plain methods");
+    //console.log(res.length + " single hunt plain methods");
     res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage, m.ccNum));
     let tbody = buildsingleplaintable();
-    console.log(huntpaths.single.plain["13-1-1-r"].methods);
-    let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
-    let page = pagestart[0] + str + pagestart[1] + tbody + pageend;
-    cb(page);
+    //console.log(huntpaths.single.plain["13-1-1-r"].methods);
+    findFields("method", allianceq, (allmm) => {
+      allmm.forEach(m => groupalliance(m));
+      //console.log("number of alliance hunt paths: "+Object.keys(huntpaths.single.alliance).length);
+      let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
+      let page = pagestart[0] + str + pagestart[1] + tbody + pageend;
+      cb(page);
+    });
+    
   });
   
 }
 
+
+//preliminary info
+function groupalliance(m) {
+  let path = m.huntPath;
+  let normal = normalizeplaces(path);
+  let nstr = rowstring(normal);
+  let n = huntpaths.single.alliance[nstr];
+  if (n) {
+    n++;
+  } else {
+    huntpaths.single.alliance[nstr] = 1;
+  }
+}
 
 
 function buildsingleplaintable() {
@@ -157,6 +184,18 @@ function checkrightwrong(path) {
   return i%2 === 1 ? "r" : "w";
 }
 
+
+
+//transpose to include first place
+function normalizeplaces(path) {
+  if (path.includes(1)) return path;
+  let used = listplaces(path);
+  let min = used[0];
+  let diff = 1-min;
+  let tp = path.map(n => n+diff);
+  return tp;
+}
+
 //given a path, tally how many times it includes each place
 //path should be array of numbers
 function tallyplaces(path) {
@@ -189,3 +228,18 @@ function listplaces(path) {
   used.sort((a,b) => a-b);
   return used;
 }
+
+
+//convert bell characters to numbers
+function bellnum(n) {
+  return places.indexOf(n)+1;
+}
+
+//convert array of bell numbers to string of characters
+function rowstring(arr) {
+  let r = arr.map(n => places[n-1]);
+  return r.join("");
+}
+
+
+
