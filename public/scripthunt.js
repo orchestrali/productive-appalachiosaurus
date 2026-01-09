@@ -1,11 +1,14 @@
 const places = "1234567890ETABCD";
 
 var huntpaths;
-
+var alliancearr;
 
 $(function() {
-  console.log(window.huntpaths.single.plain["13-1-1-r"].methods);
+  //console.log(window.huntpaths.single.plain["13-1-1-r"].methods);
   huntpaths = window.huntpaths;
+  alliancearr = Object.keys(huntpaths.single.alliance).map(p => {
+    return {p: p, count: huntpaths.single.alliance[p]};
+  });
   $(".clickable").on("click", clicktablecell);
 });
 
