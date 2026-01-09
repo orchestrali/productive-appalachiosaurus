@@ -64,6 +64,7 @@ module.exports = function buildhuntpaths(cb) {
   };
 
   findFields("method", query, (res) => {
+    console.log(res.length + " single hunt plain methods");
     res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage, m.ccNum));
     let tbody = buildsingleplaintable();
     let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
