@@ -96,9 +96,9 @@ function groupalliance(m) {
   let path = m.huntPath;
   let normal = normalizeplaces(path);
   let nstr = rowstring(normal);
-  let n = huntpaths.single.alliance[nstr];
-  if (n) {
-    n++;
+  
+  if (huntpaths.single.alliance[nstr]) {
+    huntpaths.single.alliance[nstr]++;
   } else {
     huntpaths.single.alliance[nstr] = 1;
   }
