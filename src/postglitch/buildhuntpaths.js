@@ -28,7 +28,21 @@ const pagestart = [`<head>
         </tr>
       </thead>
       <tbody>
-`];
+`,
+                  `
+      </tbody>
+    </table>
+  </div>
+  <div class="table">
+    <h3>Treble dodging paths</h3>
+    <table id="singledodging">
+      <thead>
+        <tr>
+          <th rowspan="2">hunt on</th>
+          <th rowspan="2">lowest place</th>
+          <th rowspan="2">bell/start</th>
+          <th rowspan="2">num dodges</th>
+          `];
 const pageend = `
       </tbody>
     </table>
@@ -53,43 +67,62 @@ var huntpaths = {
     alliance: {}
   }
 };
+var dodgingstages = [];
+var queryfields = "title stage huntPath ccNum"; // huntBells pnFull
+var cycles = [
+  {query: {"classification.plain": true}, analyze: analyzesingleplain, key: "plain"},
+  {query: {"classification.trebleDodging": true}, analyze: analyzesingledodging, key: "dodging"},
+  {query: {class: "Alliance"}, analyze: groupalliance}
+];
+var pageelems = [];
 
 //maybe winter-beer would be a good model
 //get methods and analyze their hunt paths
 module.exports = function buildhuntpaths(cb) {
-  let query = {
-    fields: "title stage huntPath ccNum",
-    query: {
-      "classification.plain": true,
-      numHunts: 1,
-      stage: {$gt: 3, $lt: 17}
-    }
-  };
-  let allianceq = {
-    fields: query.fields,
-    query: {
-      class: "Alliance",
-      numHunts: 1,
-      stage: {$gt: 3, $lt: 17}
-    }
-  };
 
-  findFields("method", query, (res) => {
-    //console.log(res.length + " single hunt plain methods");
-    res.forEach(m => analyzesingleplain(m.huntPath, m.title, m.stage, m.ccNum));
-    let tbody = buildsingleplaintable();
-    //console.log(huntpaths.single.plain["13-1-1-r"].methods);
-    findFields("method", allianceq, (allmm) => {
-      allmm.forEach(m => groupalliance(m));
-      //console.log("number of alliance hunt paths: "+Object.keys(huntpaths.single.alliance).length);
-      let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
-      let page = pagestart[0] + str + pagestart[1] + tbody + pageend;
-      cb(page);
+  singleloop(0);
+
+  function singleloop(i) {
+    let query = {
+      fields: queryfields,
+      query: cycles[i].query
+    };
+    query.query.numHunts = 1;
+    query.query.stage = {$gt: 3, $lt: 17};
+    findFields("method", query, (res) => {
+      res.forEach(m => cycles[i].analyze(m));
+      if (cycles[i].key) {
+        let tbody = buildsinglecommontable(cycles[i].key);
+        pageelems.push(tbody);
+      }
+      i++;
+      cycles[i] ? singleloop(i) : assemblepage();
     });
-    
-  });
+  }
+
+  function assemblepage() {
+    let str = `window.huntpaths = `+ JSON.stringify(huntpaths);
+    let page = pagestart[0] + str + pagestart[1] + pageelems[0] + pagestart[2];
+    let count = dodgingstages.length+1;
+    page += `<th colspan="${count}">number of methods by stage</th>
+        </tr>
+        <tr>
+          <th>${dodgingstages.join(`</th><th>`)}</th>
+          <th>total</th>
+        </tr>
+      </thead>
+      <tbody>
+        `;
+    page += pageelems[1] + pageend;
+    cb(page);
+  }
   
 }
+
+
+
+
+
 
 
 //preliminary info
@@ -105,6 +138,59 @@ function groupalliance(m) {
   }
 }
 
+//plain or dodging
+function buildsinglecommontable(singlekey) {
+  dodgingstages.sort((a,b) => a-b);
+  let paths = Object.keys(huntpaths.single[singlekey]);
+  paths.sort((a,b) => {
+    let aa = a.split("-");
+    let bb = b.split("-");
+    let dd = [];
+    let limit = singlekey === "plain" ? 3 : 4;
+    for (let i = 0; i < limit; i++) {
+      dd.push(Number(aa[i])-Number(bb[i]));
+    }
+    let d = dd.find(n => n != 0);
+    
+    return d || 0;
+  });
+
+  let trr = ``;
+
+  paths.forEach(p => {
+    let mm = huntpaths.single[singlekey][p].methods;
+    mm.sort(methodsort);
+
+    let arr = p.split("-");
+    let max = Number(arr[1])+Number(arr[0])-1;
+    let tr = `<tr><td>${arr.join(`</td><td>`)}`;
+    if (singlekey === "plain") {
+      tr += p.endsWith("r") ? `ight` : `rong`;
+    }
+    tr += `</td>`;
+    
+    let stages = singlekey === "plain" ? [4,5,6,7,8,9,10,11,12,13,14,15,16] : dodgingstages
+    stages.forEach(s => {
+      if (max > s) {
+        tr += `<td class="notapplicable"></td>`;
+      } else {
+        let n = mm.filter(m => m.stage === s).length;
+        let c = "";
+        let id = "";
+        if (n > 0) {
+          id = ` id="single-${singlekey}-${p+"-"+s}"`;
+          c = ` class="clickable"`;
+        }
+        tr += `<td${id}${c}>${n}</td>`;
+      }
+    });
+    
+    tr += `<td>${mm.length}</td></tr>
+    `;
+    trr += tr;
+  });
+  return trr;
+}
 
 function buildsingleplaintable() {
   let paths = Object.keys(huntpaths.single.plain);
@@ -125,11 +211,7 @@ function buildsingleplaintable() {
   paths.forEach(p => {
     let mm = huntpaths.single.plain[p].methods;
     
-    mm.sort((a,b) => {
-      let sd = a.stage-b.stage;
-      if (sd != 0) return sd;
-      return a.title.localeCompare(b.title);
-    });
+    mm.sort(methodsort);
     let arr = p.split("-");
     let max = Number(arr[1])+Number(arr[0])-1;
     let tr = `<tr><td>${arr.join(`</td><td>`)}`;
@@ -143,7 +225,7 @@ function buildsingleplaintable() {
         let c = "";
         let id = "";
         if (n > 0) {
-          id = ` id="${p+"-"+s}"`;
+          id = ` id="single-plain-${p+"-"+s}"`;
           c = ` class="clickable"`;
         }
         tr += `<td${id}${c}>${n}</td>`;
@@ -157,7 +239,13 @@ function buildsingleplaintable() {
   return trr;
 }
 
-function analyzesingletrebledodge(m) {
+function methodsort(a,b) {
+  let sd = a.stage-b.stage;
+  if (sd != 0) return sd;
+  return a.title.localeCompare(b.title);
+}
+
+function analyzesingledodging(m) {
   let path = m.huntPath;
   let arr = [];
   let tally = tallyplaces(path);
@@ -169,6 +257,7 @@ function analyzesingletrebledodge(m) {
   let key = arr.join("-");
   let o = huntpaths.single.dodging[key];
   let nm = {title: m.title, stage: m.stage, ccnum: m.ccNum};
+  if (!dodgingstages.includes(m.stage)) dodgingstages.push(m.stage);
   if (o) {
     o.methods.push(nm);
   } else {
@@ -177,7 +266,8 @@ function analyzesingletrebledodge(m) {
 }
 
 //plain methods with one hunt bell
-function analyzesingleplain(path, title, stage, num) {
+function analyzesingleplain(m) {
+  let path = m.huntPath;
   let arr = [];
   let used = listplaces(path);
   arr.push(used.length); // hunt on n places
@@ -186,12 +276,12 @@ function analyzesingleplain(path, title, stage, num) {
   arr.push(checkrightwrong(path));
   let key = arr.join("-");
   let o = huntpaths.single.plain[key];
-  let m = {title: title, stage: stage, ccnum: num};
+  let nm = {title: m.title, stage: m.stage, ccnum: m.ccNum};
   if (o) {
-    o.methods.push(m);
+    o.methods.push(nm);
   } else {
     huntpaths.single.plain[key] = {
-      methods: [m]
+      methods: [nm]
     };
   }
   
