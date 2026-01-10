@@ -59,13 +59,18 @@ const pageend = `
 <script src="scripthunt.js"></script>
 </body>
 `;
-
+var huntclasses = ['Bob', 'Place', 'Treble Bob', 'Treble Place', 'Delight', 'Surprise', 'Alliance', 'Hybrid'];
 var huntpaths = {
   single: {
     plain: {},
     dodging: {},
     alliance: {}
-  }
+  },
+  alliancecounts: {
+    common: 0,
+    weird: 0
+  },
+  multi: {}
 };
 var dodgingstages = [];
 var queryfields = "title stage huntPath ccNum"; // huntBells pnFull
@@ -80,7 +85,7 @@ var pageelems = [];
 //get methods and analyze their hunt paths
 module.exports = function buildhuntpaths(cb) {
 
-  singleloop(0);
+  multihunts();
 
   function singleloop(i) {
     let query = {
@@ -97,6 +102,20 @@ module.exports = function buildhuntpaths(cb) {
       }
       i++;
       cycles[i] ? singleloop(i) : assemblepage();
+    });
+  }
+
+  function multihunts() {
+    let query = {
+      fields: queryfields + " class huntBells pnFull",
+      query: {numHunts: {$gt: 1}}
+    };
+    findFields("method", query, (res) => {
+      huntclasses.forEach(hc => {
+        let filter = res.filter(m => m.class === hc);
+        huntpaths.multi[hc] = filter.length;
+      });
+      singleloop(0);
     });
   }
 
@@ -128,6 +147,19 @@ module.exports = function buildhuntpaths(cb) {
 //preliminary info
 function groupalliance(m) {
   let path = m.huntPath;
+  let tally = tallyplaces(path);
+  let tallytally = [];
+  tally.forEach(o => {
+    let num = o.ii.length;
+    let t = tallytally.find(e => e.num === num);
+    if (t) {
+      t.count++;
+    } else {
+      tallytally.push({num: num, count: 1});
+    }
+  });
+  let key = tallytally.length === 2 ? "common" : "weird";
+  huntpaths.alliancecounts[key]++;
   let normal = normalizeplaces(path);
   let nstr = rowstring(normal);
   
