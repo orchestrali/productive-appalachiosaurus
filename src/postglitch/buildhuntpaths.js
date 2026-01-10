@@ -49,6 +49,7 @@ const pageend = `
 var huntpaths = {
   single: {
     plain: {},
+    dodging: {},
     alliance: {}
   }
 };
@@ -156,6 +157,25 @@ function buildsingleplaintable() {
   return trr;
 }
 
+function analyzesingletrebledodge(m) {
+  let path = m.huntPath;
+  let arr = [];
+  let tally = tallyplaces(path);
+  arr.push(tally.length); //hunt on n places
+  arr.push(tally[0].place); //lowest place
+  arr.push(path[0]); //start place / hunt bell
+  let num = (tally[0].ii.length-2)/2; //number of dodges in each place+direction
+  arr.push(num);
+  let key = arr.join("-");
+  let o = huntpaths.single.dodging[key];
+  let nm = {title: m.title, stage: m.stage, ccnum: m.ccNum};
+  if (o) {
+    o.methods.push(nm);
+  } else {
+    huntpaths.single.dodging[key] = {methods: [nm]};
+  }
+}
+
 //plain methods with one hunt bell
 function analyzesingleplain(path, title, stage, num) {
   let arr = [];
@@ -181,7 +201,8 @@ function analyzesingleplain(path, title, stage, num) {
 function checkrightwrong(path) {
   let pp = tallyplaces(path);
   let lowest = pp[0];
-  let i = lowest.ii.includes(path.length-1) ? path.length-1 : Math.min(...lowest.ii);
+  let ii = lowest.ii;
+  let i = (ii.includes(path.length-1) && ii.includes(0)) ? path.length-1 : Math.min(...lowest.ii);
   return i%2 === 1 ? "r" : "w";
 }
 
