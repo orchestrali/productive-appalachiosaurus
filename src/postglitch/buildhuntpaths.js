@@ -68,7 +68,8 @@ var huntpaths = {
   },
   alliancecounts: {
     common: 0,
-    weird: 0
+    weird: 0,
+    normalized: 0
   },
   multi: {}
 };
@@ -161,6 +162,7 @@ function groupalliance(m) {
   let key = tallytally.length === 2 ? "common" : "weird";
   huntpaths.alliancecounts[key]++;
   let normal = normalizeplaces(path);
+  if (normal[0] != path[0]) huntpaths.alliancecounts.normalized++;
   let nstr = rowstring(normal);
   
   if (huntpaths.single.alliance[nstr]) {
