@@ -183,7 +183,13 @@ function groupalliance(m) {
 
 function buildalliancetables() {
   let pp = Object.keys(huntpaths.single.alliance);
-  pp.sort((a,b) => a.length-b.length);
+  pp.sort((a,b) => {
+    let used = [];
+    [a,b].forEach(s => used.push(huntpaths.single.alliance[s].used));
+    let d = used[0]-used[1];
+    if (d != 0) return d;
+    return a.length-b.length;
+  });
   let tbodies = {
     multiple: "",
     one: ""
