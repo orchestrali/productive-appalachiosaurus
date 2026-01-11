@@ -175,9 +175,9 @@ function groupalliance(m) {
   let nstr = rowstring(normal);
   
   if (huntpaths.single.alliance[nstr]) {
-    huntpaths.single.alliance[nstr].methods.push(m.title);
+    huntpaths.single.alliance[nstr].methods.push({title: m.title, num: m.ccNum});
   } else {
-    huntpaths.single.alliance[nstr] = {methods: [m.title], used: tally.length};
+    huntpaths.single.alliance[nstr] = {methods: [{title: m.title, num: m.ccNum}], used: tally.length};
   }
 }
 
@@ -201,7 +201,7 @@ function buildalliancetables() {
     //probably need a different clickable function
     if (count === 1) {
       key = "one";
-      tr += `<td>${o.methods[0]}`;
+      tr += `<td><a href="https://complib.org/method/${o.methods[0].num}" target="blank">${o.methods[0].title}</a>`;
     } else {
       //clickable + id would go here...
       tr += `<td>${count}`;
@@ -247,7 +247,19 @@ function buildsvg(p, count) {
   path.push(p[0]); //huntPath doesn't wrap around but we like our diagrams to do so!
   let width = (count+1)*increments.x;
   let height = (path.length+1)*increments.y;
+  let g = `<g style="stroke: #cccccc; stroke-width: 1; fill: none;">
+    `;
+  for (let x = increments.x; x < width; x+= increments.x) {
+    let line = ["M", x, increments.y, "v", height-2*increments.y];
+    g += `<path d="${line.join(" ")}" />`;
+  }
+  for (let y = increments.y; y < height; y+= increments.y) {
+    let line = ["M", increments.x, y, "h", width-2*increments.x];
+    g += `<path d="${line.join(" ")}" />`;
+  }
   let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  ${g}
+  </g>
   <path stroke="red" stroke-width="1" fill="none" `;
   let arr = ["M"];
   arr.push(path[0]*increments.x, increments.y);
