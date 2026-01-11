@@ -223,6 +223,7 @@ function buildalliancetables() {
       ${tbodies.multiple}
     </tbody>
   </table>
+  <h3>Unique alliance paths</h3>
   <table>
     <thead>
       <tr>
