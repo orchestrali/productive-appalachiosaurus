@@ -42,7 +42,14 @@ const pagestart = [`<head>
           <th rowspan="2">lowest place</th>
           <th rowspan="2">bell/start</th>
           <th rowspan="2">num dodges</th>
-          `];
+          `,
+                  `
+      </tbody>
+    </table>
+  </div>
+  <div class="table">
+    <h3>Alliance paths</h3>
+    `];
 const pageend = `
       </tbody>
     </table>
@@ -100,6 +107,8 @@ module.exports = function buildhuntpaths(cb) {
       if (cycles[i].key) {
         let tbody = buildsinglecommontable(cycles[i].key);
         pageelems.push(tbody);
+      } else {
+        buildalliancetables();
       }
       i++;
       cycles[i] ? singleloop(i) : assemblepage();
@@ -133,7 +142,7 @@ module.exports = function buildhuntpaths(cb) {
       </thead>
       <tbody>
         `;
-    page += pageelems[1] + pageend;
+    page += pageelems[1] + pagestart[3] + pageelems[2] + pageend;
     cb(page);
   }
   
@@ -166,11 +175,113 @@ function groupalliance(m) {
   let nstr = rowstring(normal);
   
   if (huntpaths.single.alliance[nstr]) {
-    huntpaths.single.alliance[nstr]++;
+    huntpaths.single.alliance[nstr].methods.push(m.title);
   } else {
-    huntpaths.single.alliance[nstr] = 1;
+    huntpaths.single.alliance[nstr] = {methods: [m.title], used: tally.length};
   }
 }
+
+function buildalliancetables() {
+  let pp = Object.keys(huntpaths.single.alliance);
+  pp.sort((a,b) => a.length-b.length);
+  let tbodies = {
+    multiple: "",
+    one: ""
+  };
+  
+  pp.forEach(p => {
+    let tr = `<tr><td>`;
+    let path = p.split("").map(bellnum);
+    let o = huntpaths.single.alliance[p];
+    let n = o.used;
+    let count = o.methods.length;
+    let svg = buildsvg(path, n);
+    tr += svg + `</td>`;
+    let key = "multiple";
+    //probably need a different clickable function
+    if (count === 1) {
+      key = "one";
+      tr += `<td>${o.methods[0]}`;
+    } else {
+      //clickable + id would go here...
+      tr += `<td>${count}`;
+    }
+    tr += `</td></tr>
+    `;
+    tbodies[key] += tr;
+  });
+  
+  let tables = `
+  <table>
+    <thead>
+      <tr>
+        <th>Path</th>
+        <th>Number of methods</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${tbodies.multiple}
+    </tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>Path</th>
+        <th>Method</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${tbodies.one}
+    `;
+  //add to pageelems
+  pageelems.push(tables);
+}
+
+// *** svg stuff ***
+
+var increments = {x: 10, y: 5};
+//send path with normalized places, because I don't want extra empty space
+function buildsvg(p, count) {
+  let path = [];
+  p.forEach(n => path.push(n));
+  path.push(p[0]); //huntPath doesn't wrap around but we like our diagrams to do so!
+  let width = (count+1)*increments.x;
+  let height = (path.length+1)*increments.y;
+  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path stroke="red" stroke-width="1" fill="none" `;
+  let arr = ["M"];
+  arr.push(path[0]*increments.x, increments.y);
+  let start = arr.join(" ");
+  let d = drawpath(path, start);
+  svg += `d="${d}" />
+</svg>
+`;
+  return svg;
+}
+
+//take path (array of numbers) and produce "d" attribute for svg path
+function drawpath(path, start) {
+  let d = start;
+  let last = path[0];
+  for (let i = 1; i < path.length; i++) {
+    let current = path[i];
+    let diff = current-last;
+    if (diff === 0) {
+      d += " v";
+    } else {
+      //diff is 1 or -1
+      let x = increments.x*diff;
+      d += " l "+x;
+    }
+    d += " "+increments.y;
+    
+    last = current;
+  }
+  return d;
+}
+
+// *** END svg stuff ***
+
 
 //plain or dodging
 function buildsinglecommontable(singlekey) {
