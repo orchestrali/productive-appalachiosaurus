@@ -78,7 +78,10 @@ var huntpaths = {
     weird: 0,
     normalized: 0
   },
-  multi: {}
+  multi: {
+    classes: {},
+    primary: []
+  }
 };
 var dodgingstages = [];
 var queryfields = "title stage huntPath ccNum"; // huntBells pnFull
@@ -118,12 +121,19 @@ module.exports = function buildhuntpaths(cb) {
   function multihunts() {
     let query = {
       fields: queryfields + " class huntBells pnFull",
-      query: {numHunts: {$gt: 1}}
+      query: {numHunts: {$gt: 1}, stage: {$gt: 3, $lt: 17}}
     };
     findFields("method", query, (res) => {
+      let primary = huntpaths.multi.primary;
+      let test = res.filter(m => m.huntPath[0] != m.huntBells[0]);
+      console.log("primary hunt not lowest: "+test.length);
+      res.forEach(m => {
+        let n = m.huntPath[0];
+        if (!primary.includes(n)) primary.push(n);
+      });
       huntclasses.forEach(hc => {
         let filter = res.filter(m => m.class === hc);
-        huntpaths.multi[hc] = filter.length;
+        huntpaths.multi.classes[hc] = filter.length;
       });
       singleloop(0);
     });
