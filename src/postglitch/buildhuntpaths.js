@@ -174,6 +174,7 @@ function analyzemultihunt(m) {
   let start = places.slice(0,m.stage).split("").map(bellnum);
   let lead = buildrows(start, pn);
   lead.unshift(start);
+  lead.pop();
   let paths = {};
   for (let i = 0; i < m.huntBells.length; i++) {
     let b = m.huntBells[i];
