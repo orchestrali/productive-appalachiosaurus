@@ -80,7 +80,12 @@ var huntpaths = {
   },
   multi: {
     classes: {},
-    primary: []
+    primary: [],
+    sameness: {
+      all: [],
+      some: [],
+      none: []
+    }
   }
 };
 var dodgingstages = [];
@@ -126,10 +131,11 @@ module.exports = function buildhuntpaths(cb) {
     findFields("method", query, (res) => {
       let primary = huntpaths.multi.primary;
       let test = res.filter(m => m.huntPath[0] != m.huntBells[0]);
-      console.log("primary hunt not lowest: "+test.length);
+      console.log("primary hunt not lowest: "+test.map(m => m.title).join(", "));
       res.forEach(m => {
         let n = m.huntPath[0];
         if (!primary.includes(n)) primary.push(n);
+        analyzemultihunt(m);
       });
       huntclasses.forEach(hc => {
         let filter = res.filter(m => m.class === hc);
@@ -160,6 +166,40 @@ module.exports = function buildhuntpaths(cb) {
 
 
 
+
+
+//check if a multi hunt method has same hunt paths or different
+function analyzemultihunt(m) {
+  let pn = m.pnFull.map(e => e === "x" ? [] : e);
+  let start = places.slice(0,m.stage).split("").map(bellnum);
+  let lead = buildrows(start, pn);
+  lead.unshift(start);
+  let paths = {};
+  for (let i = 0; i < m.huntBells.length; i++) {
+    let b = m.huntBells[i];
+    let path = lead.map(a => a.indexOf(b)+1);
+    let pstr = rowstring(path);
+    //uugh I don't *want* to check every rotation
+    let rot = normalizerotation2(path);
+    let rstr = rowstring(rot.path);
+    if (paths[rstr]) {
+      paths[rstr].push(pstr);
+    } else {
+      paths[rstr] = [pstr];
+    }
+    
+  }
+  let keys = Object.keys(paths);
+  let o = {title: m.title, numhunts: m.huntBells.length};
+  let key = "none";
+  if (keys.length === 1) {
+    key = "all";
+  } else if (keys.some(k => paths[k].length > 1)) {
+    key = "some";
+  }
+  huntpaths.multi.sameness[key].push(o);
+  //I guess that's all for now?
+}
 
 
 
@@ -472,6 +512,38 @@ function checkrightwrong(path) {
 
 
 
+
+//given a path
+//rotate it to begin with its lowest place & so the first and last place are not the same
+function normalizerotation2(path) {
+  let used = tallyplaces(path);
+  if (used.length === 1) {
+    //stationary bell!
+  }
+  let last = path.length-1;
+  let spliti;
+  let ii = used[0].ii;
+  if (!ii.includes(0)) {
+    spliti = ii[0];
+  }
+  if (ii.includes(0) && ii.includes(last)) {
+    spliti = last;
+    let j = ii.indexOf(last)-1;
+    while (j > -1 && ii[j] === spliti-1) {
+      spliti--;
+      j--;
+    }
+  }
+  let npath;
+  if (spliti) {
+    npath = path.slice(spliti).concat(path.slice(0,spliti));
+  } else {
+    npath = path;
+  }
+  return {path: npath, i: spliti};
+}
+
+
 //transpose to include first place
 function normalizeplaces(path) {
   if (path.includes(1)) return path;
@@ -513,6 +585,34 @@ function listplaces(path) {
   }
   used.sort((a,b) => a-b);
   return used;
+}
+
+
+//row is an array of numbers
+//pn is also an array, with numbers or empty
+function applypn(row, pn) {
+  let next = [];
+  let dir = 1;
+  for (let p = 1; p <= row.length; p++) {
+    if (pn.includes(p)) {
+      next.push(row[p-1]);
+    } else {
+      next.push(row[p-1+dir]);
+      dir*=-1;
+    }
+  }
+  return next;
+}
+
+function buildrows(start, pn) {
+  let rows = [];
+  let prev = start;
+  for (let i = 0; i < pn.length; i++) {
+    let next = applypn(prev, pn[i]);
+    rows.push(next);
+    prev = next;
+  }
+  return rows;
 }
 
 
