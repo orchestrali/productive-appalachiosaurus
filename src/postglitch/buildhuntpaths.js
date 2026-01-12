@@ -100,7 +100,7 @@ var pageelems = [];
 //maybe winter-beer would be a good model
 //get methods and analyze their hunt paths
 module.exports = function buildhuntpaths(cb) {
-
+  console.log("building huntpath page");
   multihunts();
 
   function singleloop(i) {
@@ -130,8 +130,8 @@ module.exports = function buildhuntpaths(cb) {
     };
     findFields("method", query, (res) => {
       let primary = huntpaths.multi.primary;
-      let test = res.filter(m => m.huntPath[0] != m.huntBells[0]);
-      console.log("primary hunt not lowest: "+test.map(m => m.title).join(", "));
+      //let test = res.filter(m => m.huntPath[0] != m.huntBells[0]);
+      //console.log("primary hunt not lowest: "+test.map(m => m.title).join(", "));
       res.forEach(m => {
         let n = m.huntPath[0];
         if (!primary.includes(n)) primary.push(n);
