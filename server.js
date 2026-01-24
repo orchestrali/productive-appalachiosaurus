@@ -25,6 +25,7 @@ const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
 const testfunction = require('./src/postglitch/updatePerfs.js');
 const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
+const testfortvs = require('./src/postglitch/testfortvs.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -32,7 +33,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var db = connect();
 var huntpage;
-buildhuntpaths(page => huntpage = page);
+var tvresults;
+buildhuntpaths(page => {
+  huntpage = page;
+  testfortvs(arr => tvresults = arr);
+});
 //updatefiles(() => {});
 //buildlocal();
 //separate();
