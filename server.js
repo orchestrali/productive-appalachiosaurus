@@ -61,6 +61,14 @@ app.get("/hunts", (request, response) => {
   }
 });
 
+app.get("/tvtest", (request, response) => {
+  if (tvresults) {
+    response.send(tvresults.map(o => o.title));
+  } else {
+    response.send("try again later");
+  }
+});
+
 app.get("/towers", (request, response) => {
   response.send(require("./src/towers.json"));
 });
