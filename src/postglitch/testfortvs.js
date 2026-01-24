@@ -28,13 +28,14 @@ module.exports = function testfortvs(cb) {
 
 
 
+//arr of interactions, leadlength
 function interactionstring(arr, ll) {
   let timeline = [];
   for (let i = 0; i < ll; i++) {
     let current = arr.filter(o => o.ii.includes(i));
     current.sort((a,b) => a.pp[0]-b.pp[0]);
     let pp = [];
-    current.forEach(o => {
+    current.forEach((o,oi) => {
       let pair = rowstring(o.pp.map(n => n+1));
       if (o.ii[o.ii.length-1] === i) {
         pair += o.enterleave ? "+" : "-";
@@ -43,9 +44,13 @@ function interactionstring(arr, ll) {
         let last = pp[pp.length-1];
         if (last[1] === pair[0]) { //last.length === 2 && 
           //pairs of places overlap
-          last += ";"; 
-          pp.pop();
-          pp.push(last);
+          let prev = current[oi-1];
+          let overlapi = o.ii.filter(n => prev.ii.includes(n));
+          if (overlapi.length > 1) {
+            last += ";"; 
+            pp.pop();
+            pp.push(last);
+          }
         }
       }
       pp.push(pair);
