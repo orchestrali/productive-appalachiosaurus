@@ -26,6 +26,7 @@ const router = require('./src/newrouter.js');
 const testfunction = require('./src/postglitch/updatePerfs.js');
 const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
 const testfortvs = require('./src/postglitch/testfortvs.js');
+const buildtvpage = require('./src/postglitch/trivialvars.js');
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -34,9 +35,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var db = connect();
 var huntpage;
 var tvresults;
+var tvpage;
 buildhuntpaths(page => {
   huntpage = page;
-  testfortvs(arr => tvresults = arr);
+  //testfortvs(arr => tvresults = arr);
+  buildtvpage(html => tvpage = html);
 });
 //updatefiles(() => {});
 //buildlocal();
@@ -69,8 +72,9 @@ app.get("/hunts", (request, response) => {
 
 //testing for trivial variations
 app.get("/tvtest", (request, response) => {
-  if (tvresults) {
-    response.send(tvresults.map(o => o.title));
+  if (tvpage) {
+    response.send(tvpage);
+    //response.send(tvresults.map(o => o.title));
   } else {
     response.send("try again later");
   }
