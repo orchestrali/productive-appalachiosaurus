@@ -53,6 +53,7 @@ app.get("/", (request, response) => {
   
 });
 
+//build static page showing hunt bell paths
 app.get("/hunts", (request, response) => {
   if (huntpage) {
     response.send(huntpage);
@@ -61,6 +62,7 @@ app.get("/hunts", (request, response) => {
   }
 });
 
+//testing for trivial variations
 app.get("/tvtest", (request, response) => {
   if (tvresults) {
     response.send(tvresults.map(o => o.title));
@@ -69,10 +71,12 @@ app.get("/tvtest", (request, response) => {
   }
 });
 
+//tower data
 app.get("/towers", (request, response) => {
   response.send(require("./src/towers.json"));
 });
 
+//file(s) for changeringing.net??
 app.get("/methods", (request, response) => {
   if (db) {
     getmethods((res) => {
@@ -81,6 +85,7 @@ app.get("/methods", (request, response) => {
   }
 });
 
+//for tracking what's in the database
 app.get("/ccnums", (request, response) => {
   if (db) {
     let query = {query: {}, fields: "ccNum"};
@@ -90,6 +95,7 @@ app.get("/ccnums", (request, response) => {
   }
 });
 
+//trigger download of CCCBR method file & database update
 app.get("/download", (request, response) => {
   if (request.query.secret === process.env.SECRET) {
     //download, filter, callback
