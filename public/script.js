@@ -58,6 +58,7 @@ function triggerdownload() {
   });
 }
 
+//based on the id of the button clicked, send a string to be opened as a file
 function viewfile(e) {
   let files = {
     viewresults: shortmethods,
@@ -70,6 +71,7 @@ function viewfile(e) {
   }
 }
 
+//get complete list of ccnums included in the database
 function getccnums() {
   $("#container").children().remove();
   $("#container").append(`<p>loading file...</p>`);
@@ -129,6 +131,7 @@ function openfile(file) {
   URL.revokeObjectURL(a.href);
 }
 
+//this one is specifically for the changeringing.net methods file...
 function downloadfile() {
   const a = document.createElement('a');
   const blob = new Blob([methodfile], {type: "text/plain"});
