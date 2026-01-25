@@ -45,6 +45,11 @@ buildhuntpaths(page => {
 //updatedove();
 //doveformat();
 //update();
+/*
+NOTES
+- need to update existing methods...performances, additional notes, etc.
+- maybe I should just save a more recent xml file here for a bit so it doesn't have to be downloaded every time...
+*/
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", (request, response) => {
