@@ -1,4 +1,5 @@
 const places = "1234567890ETABCD";
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const findFields = require("../find/findFields.js");
 const fixedpageparts = [`<head>
   <title>Trivial Variations</title>
@@ -27,6 +28,8 @@ module.exports = function trivialvars(cb) {
     simple: {},
     complex: {}
   };
+  let alternate = {};
+  let concrete;
 
   findFields("method", query, (res) => {
     console.log("starting processing");
@@ -45,11 +48,54 @@ module.exports = function trivialvars(cb) {
         } else {
           cats[key][str] = [m.title];
         }
+        //other grouping
+        let alt = buildalternateintstr(interactions, ll);
+        let exp = trivialvarexperiment(alt, pn, m.stage);
+        if (alternate[exp]) {
+          alternate[exp].push(m.title);
+        } else {
+          alternate[exp] = [m.title];
+        }
+        if (m.title === "Double Concrete Block Place Minor") concrete = exp;
       }
     });
-    let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + fixedpageparts[1];
+    let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + `;
+    window.alternate = ` + JSON.stringify(alternate) + `;
+    window.concretegroup = ` + JSON.stringify(alternate[concrete]) + `; 
+    ` + fixedpageparts[1];
     cb(page);
   });
+}
+
+
+
+
+
+//trying to build a representation of the invariable part
+//need NEW interaction string
+function trivialvarexperiment(intstr, pn, stage) {
+  let intarr = intstr.split(".");
+  let summary = [];
+  let pnswaps = convertplacenotation(pn, stage);
+  let prev = intarr[intarr.length-1];
+  for (let i = 0; i < pn.length; i++) {
+    let pairs = intarr[i].split("");
+    let pairpp = [];
+    pairs.forEach(l => {
+      let nn = [1,2].map(n => alphabet.indexOf(l)+n);
+      nn.forEach(n => {if (!pairpp.includes(n)) pairpp.push(n)});
+    });
+    let ppstr = rowstring(pairpp);
+    let change = {
+      places: pn[i].filter(n => !pairpp.includes(n)),
+      swaps: pnswaps[i].filter(e => !ppstr.includes(e))
+    };
+    summary.push(change);
+  }
+  let combined = summary.map(o => {
+    return rowstring(o.places)+":"+o.swaps.join("-");
+  }).join(".");
+  return combined;
 }
 
 
@@ -87,6 +133,25 @@ function interactionstring(arr, ll) {
   }
   return timeline.join(".")
 }
+
+//changes instead of rows
+function buildalternateintstr(arr, ll) {
+  let timeline = [];
+  for (let i = 0; i < ll; i++) {
+    let current = arr.filter(o => o.ii.includes(i));
+    current.sort((a,b) => a.pp[0]-b.pp[0]);
+    let pp = [];
+    current.forEach(o => {
+      if (i != o.ii[o.ii.length-1]) {
+        let pair = alphabet[o.pp[0]];
+        pp.push(pair);
+      }
+    });
+    timeline.push(pp.join(""));
+  }
+  return timeline.join(".");
+}
+
 
 function findinteractions(pn, stage) {
   let pairs = [];
@@ -173,6 +238,43 @@ function buildinteraction(section, ii, p, ll, id) {
 function checkcontains(a, b) {
   return b.every(e => a.includes(e));
 }
+
+////
+
+//take place notation and convert to pairs that swap
+function convertplacenotation(pn, pnstage) {
+  let swaps = [];
+  //at each index "i": [i+1, i+2]
+  let pairs = buildnchoose2(pnstage);
+  for (let i = 0; i < pn.length; i++) {
+    let ch = [];
+    let pp = [0].concat(pn[i]);
+    pp.push(pnstage+1);
+    for (let j = 0; j < pp.length-1; j++) {
+      let start = pp[j];
+      if (start < pairs.length) {
+        let end = pp[j+1]-1;
+        for (let k = start; k < end; k+=2) {
+          ch.push(rowstring(pairs[k]));
+        }
+      }
+    }
+    swaps.push(ch);
+  }
+  return swaps;
+}
+
+//starts with [1,2] (not 0)
+function buildnchoose2(n) {
+  let pairs = [];
+  for (let i = 1; i < n; i++) {
+    pairs.push([i,i+1]);
+  }
+  return pairs;
+}
+
+
+
 
 ////
 
