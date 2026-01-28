@@ -34,10 +34,10 @@ $(function() {
 
 
 function setup() {
-  methodvarindex = window.methodvarindex;
+  //methodvarindex = window.methodvarindex;
   methodindex = window.methodindex;
   trivialclasses = window.trivialclasses;
-  trivialcats = window.trivialcats;
+  //trivialcats = window.trivialcats;
   methodtitles = Object.keys(methodindex);
 }
 
@@ -47,7 +47,7 @@ function setup() {
 function choosemethodclick() {
   if (!$("#choosemethod").hasClass("disabled")) {
     let title = $("#methodtitle").val();
-    let m = methodvarindex[title];
+    let m = methodindex[title];
     if (m) {
       viewmethod(title);
     }
@@ -63,8 +63,9 @@ function titleclick(e) {
 
 function viewmethod(title) {
   $("table").hide();
-  let cc = methodvarindex[title];
+  
   method = methodindex[title];
+  let cc = method.tvclasses;
   
   let pn = method.pn;
   //display title
@@ -85,13 +86,14 @@ function viewmethod(title) {
     });
   });
   let vartitles = Object.keys(vartitleobj);
+  console.log(vartitles.length);
   if (vartitles.length) {
     vartitles.sort();
     let tbody = "";
     vartitles.forEach(t => {
       let tr = `
       <tr><td class="methodtitle">${t}</td><td>${vartitleobj[t]}</td><td>`;
-      if (methodvarindex[t].length > 1) tr += `*`;
+      if (methodindex[t].tvclasses.length > 1) tr += `*`;
       tr += `</td>`;
       let mpn = methodindex[t].pn;
       mpn.forEach((s,i) => {
@@ -104,6 +106,8 @@ function viewmethod(title) {
     //add the tbody
     $("tbody").html(tbody);
     $("table").show();
+  } else {
+    $("#methodinfo").append(`<p>No trivial variations</p>`);
   }
   
 }
