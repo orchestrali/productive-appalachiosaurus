@@ -1,0 +1,63 @@
+
+
+body,
+input,
+select,
+textarea {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+li {
+  list-style-type: none;
+}
+
+.disabled {
+  color: #888888;
+}
+
+#methodsearch {
+  width: 250px;
+  position: relative;
+}
+#methodlist {
+  margin-left: 1px;
+  padding-left: 0;
+  width: 98.5%;
+  position: absolute;
+  top: 6px;
+  background-color: aliceblue;
+}
+#methodlist li {
+  display: none;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  margin-bottom: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: aliceblue;
+}
+#methodlist li:hover, #methodlist li.selected {
+  background-color: lightsteelblue;
+}
+
+
+
+table {
+  border-collapse: collapse;
+}
+
+td.methodtitle {
+  color: #1a1ad6;
+}
+td.methodtitle:hover {
+  text-decoration: underline;
+}
+
+td.same {
+  color: gray;
+}
+
+
+
+
