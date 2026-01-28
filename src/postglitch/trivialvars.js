@@ -126,11 +126,11 @@ module.exports = function trivialvars(cb) {
       res.splice(0,1);
     };
     console.log(Object.keys(methodindex).length);
-    
+    console.log(Object.keys(alternate).length);
     
     let page = fixedpageparts[0] + `window.impossible = ` + JSON.stringify(impossible) + `;
-    window.methodindex = ` + JSON.stringify(methodindex, null, 2) + `;
     window.trivialclasses = ` + JSON.stringify(alternate) + `;
+    window.methodindex = ` + JSON.stringify(methodindex, null, 2) + `;
     ` + fixedpageparts[1];
     console.log("done");
     cb(page);
