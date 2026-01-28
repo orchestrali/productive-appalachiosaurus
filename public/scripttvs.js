@@ -10,11 +10,11 @@ var matchmethods = [];
 var methodtitles = [];
 
 //index to each method's variation class(es)
-var methodvarindex = {};
+var methodvarindex;
 //index to method info (pn, ccNum)
-var methodindex = {};
+var methodindex;
 //index to the variation classes
-var trivialclasses = {};
+var trivialclasses;
 
 $(function() {
   setup();
