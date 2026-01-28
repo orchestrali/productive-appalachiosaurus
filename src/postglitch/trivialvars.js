@@ -92,7 +92,7 @@ module.exports = function trivialvars(cb) {
         if (str.includes(";")) {
           versions = handleoverlapsets(interactions);
           //t += "*";
-          methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
+          //methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
           //complex[m.title] = versions.length;
         }
         //methodvarindex[t] = versions;
@@ -106,7 +106,7 @@ module.exports = function trivialvars(cb) {
             alternate[s] = [t];
           }
         });
-        
+        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
         
         /*
         
