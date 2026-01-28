@@ -81,7 +81,9 @@ module.exports = function trivialvars(cb) {
     let experiment = [];
     concrete.forEach(s => {
       let mm = alternate[s];
-      mm.forEach(m => if (!experiment.includes(m)) experiment.push(m));
+      mm.forEach(m => {
+        if (!experiment.includes(m)) experiment.push(m);
+      });
     });
     let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + `;
     window.alternate = ` + JSON.stringify(alternate) + `;
