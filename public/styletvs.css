@@ -17,13 +17,16 @@ li {
 }
 
 #methodsearch {
-  width: 250px;
+  width: 500px;
   position: relative;
 }
+#methodtitle {
+  width: 246px;
+}
 #methodlist {
-  margin-left: 1px;
+  margin-left: 176px;
   padding-left: 0;
-  width: 98.5%;
+  width: 246px;
   position: absolute;
   top: 6px;
   background-color: aliceblue;
@@ -44,6 +47,7 @@ li {
 
 
 table {
+  display: none;
   border-collapse: collapse;
 }
 
