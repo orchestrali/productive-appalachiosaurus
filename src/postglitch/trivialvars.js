@@ -3,7 +3,7 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const findFields = require("../find/findFields.js");
 const fixedpageparts = [`<head>
   <title>Trivial Variations</title>
-  <link rel="stylesheet" href="/stylehunt.css">
+  <link rel="stylesheet" href="/styletvs.css">
   <script>
   `,
                        `
@@ -11,7 +11,26 @@ const fixedpageparts = [`<head>
 </head>
 <body>
   <h2>Trivial Variations</h2>
-  <p>nothing here yet</p>
+  <div>
+    <div id="methodsearch">
+      <label for="methodtitle">Search for a method: <input type="text" id="methodtitle" /></label>
+      <button id="choosemethod" class="disabled">
+        Select
+      </button>
+      <ul id="methodlist">
+
+      </ul>
+    </div>
+  </div>
+  <div id="methodinfo"></div>
+  <div>
+    <table>
+      <thead>
+        <tr><th>Method</th><th>TV class</th><th>multi</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="scripttvs.js"></script>
 </body>`
@@ -21,6 +40,15 @@ var query = {
   fields: "title class stage pn pnFull ccNum",
   query: {}
 };
+
+/*
+//index to each method's variation class(es)
+var methodvarindex = {};
+//index to method info (pn, ccNum)
+var methodindex = {};
+//index to the variation classes
+var trivialclasses = {};
+*/
 
 module.exports = function trivialvars(cb) {
   let cats = {
@@ -32,6 +60,10 @@ module.exports = function trivialvars(cb) {
   let complex = {};
   let concrete;
 
+  //let impossible = [];
+  let methodvarindex = {};
+  let methodindex = {};
+
   findFields("method", query, (res) => {
     console.log("starting processing");
     res.forEach((m,i) => {
@@ -40,6 +72,7 @@ module.exports = function trivialvars(cb) {
       let interactions = findinteractions(pn, m.stage);
       if (interactions.length === 0) {
         cats.none.push(m.title);
+        //impossible.push(m.title);
       } else {
         let ll = m.pnFull.length;
         let str = interactionstring(interactions, ll);
@@ -53,9 +86,11 @@ module.exports = function trivialvars(cb) {
         let t = m.title;
         if (str.includes(";")) {
           versions = handleoverlapsets(interactions);
-          t += "*";
-          complex[m.title] = versions.length;
+          //t += "*";
+          //complex[m.title] = versions.length;
         }
+        methodvarindex[t] = versions;
+        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a))};
         versions.forEach(v => {
           let s = interactionstring(v, ll);
           if (alternate[s]) {
@@ -64,8 +99,10 @@ module.exports = function trivialvars(cb) {
             alternate[s] = [t];
           }
         });
-        if (m.title === "Double Concrete Block Place Minor") concrete = versions.map(v => interactionstring(v,ll));
+        
         /*
+        
+        if (m.title === "Double Concrete Block Place Minor") concrete = versions.map(v => interactionstring(v,ll));
         //other grouping
         let alt = buildalternateintstr(interactions, ll);
         let exp = trivialvarexperiment(alt, pn, m.stage);
@@ -78,17 +115,11 @@ module.exports = function trivialvars(cb) {
         */
       }
     });
-    let experiment = [];
-    concrete.forEach(s => {
-      let mm = alternate[s];
-      mm.forEach(m => {
-        if (!experiment.includes(m)) experiment.push(m);
-      });
-    });
+    
     let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + `;
-    window.alternate = ` + JSON.stringify(alternate) + `;
-    window.complexnums = ` + JSON.stringify(complex) + `;
-    window.concretegroup = ` + JSON.stringify(experiment) + `; 
+    window.methodvarindex = ` + JSON.stringify(methodvarindex) + `;
+    window.methodindex = ` + JSON.stringify(methodindex) + `;
+    window.trivialclasses = ` + JSON.stringify(alternate) + `;
     ` + fixedpageparts[1];
     console.log("done");
     cb(page);
@@ -96,8 +127,21 @@ module.exports = function trivialvars(cb) {
 }
 
 /*
+let experiment = [];
+    concrete.forEach(s => {
+      let mm = alternate[s];
+      mm.forEach(m => {
+        if (!experiment.includes(m)) experiment.push(m);
+      });
+    });
+
 window.alternate = ` + JSON.stringify(alternate) + `;
     window.concretegroup = ` + JSON.stringify(alternate[concrete]) + `; 
+
+    
+    window.alternate = ` + JSON.stringify(alternate) + `;
+    window.complexnums = ` + JSON.stringify(complex) + `;
+    window.concretegroup = ` + JSON.stringify(experiment) + `;
 */
 
 
