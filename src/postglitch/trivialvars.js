@@ -29,6 +29,7 @@ module.exports = function trivialvars(cb) {
     complex: {}
   };
   let alternate = {};
+  let complex = {};
   let concrete;
 
   findFields("method", query, (res) => {
@@ -48,6 +49,23 @@ module.exports = function trivialvars(cb) {
         } else {
           cats[key][str] = [m.title];
         }
+        let versions = [interactions];
+        let t = m.title;
+        if (str.includes(";")) {
+          versions = handleoverlapsets(interactions);
+          t += "*";
+          complex[m.title] = versions.length;
+        }
+        versions.forEach(v => {
+          let s = interactionstring(v, ll);
+          if (alternate[s]) {
+            alternate[s].push(t);
+          } else {
+            alternate[s] = [t];
+          }
+        });
+        if (m.title === "Double Concrete Block Place Minor") concrete = versions.map(v => interactionstring(v,ll));
+        /*
         //other grouping
         let alt = buildalternateintstr(interactions, ll);
         let exp = trivialvarexperiment(alt, pn, m.stage);
@@ -57,16 +75,154 @@ module.exports = function trivialvars(cb) {
           alternate[exp] = [m.title];
         }
         if (m.title === "Double Concrete Block Place Minor") concrete = exp;
+        */
       }
+    });
+    let experiment = [];
+    concrete.forEach(s => {
+      let mm = alternate[s];
+      mm.forEach(m => if (!experiment.includes(m)) experiment.push(m));
     });
     let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + `;
     window.alternate = ` + JSON.stringify(alternate) + `;
-    window.concretegroup = ` + JSON.stringify(alternate[concrete]) + `; 
+    window.complexnums = ` + JSON.stringify(complex) + `;
+    window.concretegroup = ` + JSON.stringify(experiment) + `; 
     ` + fixedpageparts[1];
     cb(page);
   });
 }
 
+/*
+window.alternate = ` + JSON.stringify(alternate) + `;
+    window.concretegroup = ` + JSON.stringify(alternate[concrete]) + `; 
+*/
+
+
+
+
+function buildintoverlaps(interactions) {
+  let overlaps = [];
+  for (let i = 0; i < interactions.length-1; i++) {
+    let o = interactions[i];
+    let filter = interactions.slice(i+1).filter(e => e.pp.some(n => o.pp.includes(n)) && e.ii.filter(n => o.ii.includes(n)).length > 1);
+    filter.forEach(e => {
+      overlaps.push([o.id, e.id]);
+    });
+  }
+  return overlaps;
+}
+
+//take results of buildintoverlaps
+function combineoverlaps(laps) {
+  let all = [];
+  let remaining = [];
+  laps.forEach(a => {
+    all.push(...a);
+    remaining.push(a);
+  });
+  let sets = [];
+  while (remaining.length) {
+    let start = remaining.shift();
+    let extraii = [];
+    for (let i = 0; i < remaining.length; i++) {
+      let a = remaining[i];
+      if (start.some(n => a.includes(n))) {
+        let add = a.filter(n => !start.includes(n));
+        start.push(...add);
+        extraii.push(i);
+      }
+    }
+    extraii.reverse();
+    extraii.forEach(i => remaining.splice(i,1));
+    sets.push(start);
+  }
+  return sets;
+}
+
+//
+function handleoverlapsets(interactions) {
+  let laps = combineoverlaps(buildintoverlaps(interactions));
+  for (let i = 0; i < interactions.length; i++) {
+    let j = interactions[i].pp[0];
+    interactions[i].pcode = alphabet[j];
+  }
+  let leftover = interactions.filter(o => !laps.some(set => set.includes(o.id)));
+  
+  let versions = [leftover];
+  
+  laps.forEach(set => {
+    let arr = interactions.filter(o => set.includes(o.id));
+    let options = expandoverlapset(arr);
+    //options.forEach(o => console.log(o));
+    let next = [];
+    versions.forEach(v => {
+      next.push(v.concat(...arr));
+      options.forEach(o => {
+        next.push(v.concat(...o));
+      });
+    });
+    versions = next;
+  });
+  return versions;
+}
+
+//given interactions that overlap & have pcodes
+function expandoverlapset(arr) {
+  let pcodes = [];
+  arr.forEach(o => {
+    if (!pcodes.includes(o.pcode)) pcodes.push(o.pcode);
+  });
+  let groups = {
+    odd: [],
+    even: []
+  };
+  for (let i = 0; i < arr.length; i++) {
+    let j = pcodes.indexOf(arr[i].pcode) % 2;
+    let k = j === 0 ? "odd" : "even";
+    groups[k].push(arr[i]);
+  }
+  let versions = [];
+  ["odd", "even"].forEach(w => {
+    let k = w === "odd" ? "even" : "odd";
+    let keep = groups[w];
+    let change = groups[k];
+    let modified = [];
+    change.forEach(c => {
+      let pindex = alphabet.indexOf(c.pcode);
+      let check = keep.filter(o => Math.abs(pindex-alphabet.indexOf(o.pcode)) === 1);
+      if (!check.some(o => c.ii.every(i => o.ii.includes(i)))) {
+        //if this box isn't next to another for its whole length...
+        let filteredii = check.map(o => o.ii.slice(1,-1));
+        let chunks = [];
+        let current = [];
+        for (let j = 0; j < c.ii.length; j++) {
+          let i = c.ii[j];
+          let test = filteredii.some(a => a.includes(i));
+          if (test) {
+            if (current.length > 2) {
+              chunks.push(current);
+            }
+            current = [];
+          } else {
+            current.push({i: i, seg: c.segment[j]});
+          }
+        }
+        if (current.length > 2) chunks.push(current);
+        
+        chunks.forEach(a => {
+          let o = {
+            pp: c.pp,
+            ii: a.map(e => e.i),
+            enterleave: a[0].seg === a[a.length-1].seg
+          };
+          modified.push(o);
+        });
+      }
+    });
+    versions.push(keep.concat(modified));
+  });
+  return versions;
+}
 
 
 
