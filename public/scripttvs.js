@@ -91,15 +91,18 @@ function viewmethod(title) {
     vartitles.sort();
     let tbody = "";
     vartitles.forEach(t => {
+      let m = methodindex[t];
       let tr = `
-      <tr><td class="methodtitle">${t}</td><td>${vartitleobj[t]}</td><td>`;
-      if (methodindex[t].tvclasses.length > 1) tr += `*`;
+      <tr><td${m ? ` class="methodtitle"`: ""}>${t}</td><td>${vartitleobj[t]}</td><td>`;
+      if (m && m.tvclasses.length > 1) tr += `*`;
       tr += `</td>`;
-      let mpn = methodindex[t].pn;
-      mpn.forEach((s,i) => {
-        let c = s === pn[i] ? ` class="same"` : "";
-        tr += `<td${c}>${s.length ? s : "x"}</td>`;
-      });
+      if (m) {
+        let mpn = methodindex[t].pn;
+        mpn.forEach((s,i) => {
+          let c = s === pn[i] ? ` class="same"` : "";
+          tr += `<td${c}>${s.length ? s : "x"}</td>`;
+        });
+      }
       tr += `</tr>`;
       tbody += tr;
     });
