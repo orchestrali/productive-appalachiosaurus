@@ -60,7 +60,7 @@ module.exports = function trivialvars(cb) {
   let complex = {};
   let concrete;
 
-  //let impossible = [];
+  let impossible = [];
   let methodvarindex = {};
   let methodindex = {};
 
@@ -71,17 +71,19 @@ module.exports = function trivialvars(cb) {
       let pn = m.pnFull.map(e => e === "x" ? [] : e);
       let interactions = findinteractions(pn, m.stage);
       if (interactions.length === 0) {
-        cats.none.push(m.title);
-        //impossible.push(m.title);
+        //cats.none.push(m.title);
+        impossible.push(m.title);
       } else {
         let ll = m.pnFull.length;
         let str = interactionstring(interactions, ll);
         let key = str.includes(";") ? "complex" : "simple";
+        /*
         if (cats[key][str]) {
           cats[key][str].push(m.title);
         } else {
           cats[key][str] = [m.title];
         }
+        */
         let versions = [interactions];
         let t = m.title;
         if (str.includes(";")) {
@@ -89,16 +91,18 @@ module.exports = function trivialvars(cb) {
           //t += "*";
           //complex[m.title] = versions.length;
         }
-        methodvarindex[t] = versions;
-        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a))};
+        //methodvarindex[t] = versions;
+        let sversions = [];
         versions.forEach(v => {
           let s = interactionstring(v, ll);
+          sversions.push(s);
           if (alternate[s]) {
             alternate[s].push(t);
           } else {
             alternate[s] = [t];
           }
         });
+        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: sversions};
         
         /*
         
@@ -116,8 +120,7 @@ module.exports = function trivialvars(cb) {
       }
     });
     
-    let page = fixedpageparts[0] + `window.trivialcats = ` + JSON.stringify(cats) + `;
-    window.methodvarindex = ` + JSON.stringify(methodvarindex) + `;
+    let page = fixedpageparts[0] + `window.impossible = ` + JSON.stringify(impossible) + `;
     window.methodindex = ` + JSON.stringify(methodindex) + `;
     window.trivialclasses = ` + JSON.stringify(alternate) + `;
     ` + fixedpageparts[1];
@@ -138,7 +141,7 @@ let experiment = [];
 window.alternate = ` + JSON.stringify(alternate) + `;
     window.concretegroup = ` + JSON.stringify(alternate[concrete]) + `; 
 
-    
+    window.methodvarindex = ` + JSON.stringify(methodvarindex) + `;
     window.alternate = ` + JSON.stringify(alternate) + `;
     window.complexnums = ` + JSON.stringify(complex) + `;
     window.concretegroup = ` + JSON.stringify(experiment) + `;
