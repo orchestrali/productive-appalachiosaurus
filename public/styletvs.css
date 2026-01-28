@@ -51,11 +51,17 @@ table {
   border-collapse: collapse;
 }
 
+th, td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
 td.methodtitle {
   color: #1a1ad6;
 }
 td.methodtitle:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 td.same {
