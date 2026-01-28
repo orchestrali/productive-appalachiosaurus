@@ -66,7 +66,9 @@ module.exports = function trivialvars(cb) {
 
   findFields("method", query, (res) => {
     console.log("starting processing");
-    res.forEach((m,i) => {
+    let i = 0;
+    while (res.length) {
+      let m = res[0];
       if (i%1000 === 0) console.log("method "+i);
       let pn = m.pnFull.map(e => e === "x" ? [] : e);
       let interactions = findinteractions(pn, m.stage);
@@ -120,12 +122,14 @@ module.exports = function trivialvars(cb) {
         if (m.title === "Double Concrete Block Place Minor") concrete = exp;
         */
       }
-    });
+      i++;
+      res.splice(0,1);
+    };
     console.log(Object.keys(methodindex).length);
     
     
     let page = fixedpageparts[0] + `window.impossible = ` + JSON.stringify(impossible) + `;
-    window.methodindex = ` + JSON.stringify(methodindex) + `;
+    window.methodindex = ` + JSON.stringify(methodindex, null, 2) + `;
     window.trivialclasses = ` + JSON.stringify(alternate) + `;
     ` + fixedpageparts[1];
     console.log("done");
