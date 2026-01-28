@@ -88,6 +88,7 @@ module.exports = function trivialvars(cb) {
     window.complexnums = ` + JSON.stringify(complex) + `;
     window.concretegroup = ` + JSON.stringify(experiment) + `; 
     ` + fixedpageparts[1];
+    console.log("done");
     cb(page);
   });
 }
