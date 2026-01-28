@@ -57,8 +57,8 @@ module.exports = function trivialvars(cb) {
     complex: {}
   };
   let alternate = {};
-  let complex = {};
-  let concrete;
+  //let complex = {};
+  //let concrete;
 
   let impossible = [];
   let methodvarindex = {};
@@ -76,8 +76,9 @@ module.exports = function trivialvars(cb) {
       } else {
         let ll = m.pnFull.length;
         let str = interactionstring(interactions, ll);
-        let key = str.includes(";") ? "complex" : "simple";
         /*
+        let key = str.includes(";") ? "complex" : "simple";
+        
         if (cats[key][str]) {
           cats[key][str].push(m.title);
         } else {
@@ -89,6 +90,7 @@ module.exports = function trivialvars(cb) {
         if (str.includes(";")) {
           versions = handleoverlapsets(interactions);
           //t += "*";
+          methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
           //complex[m.title] = versions.length;
         }
         //methodvarindex[t] = versions;
@@ -102,7 +104,7 @@ module.exports = function trivialvars(cb) {
             alternate[s] = [t];
           }
         });
-        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: sversions};
+        
         
         /*
         
@@ -119,6 +121,8 @@ module.exports = function trivialvars(cb) {
         */
       }
     });
+    console.log(Object.keys(methodindex).length);
+    
     
     let page = fixedpageparts[0] + `window.impossible = ` + JSON.stringify(impossible) + `;
     window.methodindex = ` + JSON.stringify(methodindex) + `;
