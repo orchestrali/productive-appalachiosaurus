@@ -39,6 +39,7 @@ function setup() {
   trivialclasses = window.trivialclasses;
   //trivialcats = window.trivialcats;
   methodtitles = Object.keys(methodindex);
+  console.log(methodtitles.length + " method titles");
 }
 
 
