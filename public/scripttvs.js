@@ -64,6 +64,7 @@ function titleclick(e) {
 
 function viewmethod(title) {
   $("table").hide();
+  $("th.pn").remove();
   
   method = methodindex[title];
   let cc = method.tvclasses;
@@ -87,8 +88,16 @@ function viewmethod(title) {
     });
   });
   let vartitles = Object.keys(vartitleobj);
-  console.log(vartitles.length);
+  //console.log(vartitles.length);
+  let text = vartitles.length + " trivial variation";
+  if (vartitles.length != 1) text += "s";
+  $("#methodinfo").append(`<p>${text}</p>`);
   if (vartitles.length) {
+    //pn table column headers
+    pn.forEach(s => {
+      let th = s.length ? s : "x";
+      $("thead tr").append(`<th class="pn">${th}</th>`);
+    });
     vartitles.sort();
     let tbody = "";
     vartitles.forEach(t => {
@@ -111,7 +120,7 @@ function viewmethod(title) {
     $("tbody").html(tbody);
     $("table").show();
   } else {
-    $("#methodinfo").append(`<p>No trivial variations</p>`);
+    
   }
   
 }
