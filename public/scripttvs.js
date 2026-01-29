@@ -109,10 +109,13 @@ function viewmethod(title) {
       tr += `</td>`;
       if (m) {
         let mpn = methodindex[t].pn;
+        let countdiff = 0;
         mpn.forEach((s,i) => {
           let c = s === pn[i] ? ` class="same"` : "";
+          if (c.length === 0) countdiff++;
           tr += `<td${c}>${s.length ? s : "x"}</td>`;
         });
+        tr += `<td>${countdiff}</td>`;
       }
       tr += `</tr>`;
       tbody += tr;
