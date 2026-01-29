@@ -94,8 +94,9 @@ function viewmethod(title) {
   $("#methodinfo").append(`<p>${text}</p>`);
   if (vartitles.length) {
     //pn table column headers
-    pn.forEach(s => {
+    pn.forEach((s,j) => {
       let th = s.length ? s : "x";
+      if (j === pn.length/2 - 1) th = "HL: "+th;
       $("thead tr").append(`<th class="pn">${th}</th>`);
     });
     vartitles.sort();
