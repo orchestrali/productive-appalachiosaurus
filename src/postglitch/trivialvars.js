@@ -90,7 +90,7 @@ module.exports = function trivialvars(cb) {
         let versions = [interactions];
         let t = m.title;
         if (str.includes(";")) {
-          versions = handleoverlapsets(interactions);
+          versions = handleoverlapsets(interactions).filter(a => !interactionstring(a,ll).includes(";"));
           //t += "*";
           //methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
           //complex[m.title] = versions.length;
@@ -98,7 +98,9 @@ module.exports = function trivialvars(cb) {
         //methodvarindex[t] = versions;
         let sversions = [];
         versions.forEach(v => {
-          let s = interactionstring(v, ll);
+          let tvpn = buildtvthing(v, pn, m.stage);
+          //stringify the place notation with the stage indicated at the beginning
+          let s = places[m.stage-1]+":"+tvpn.map(a => rowstring(a)).join(".");
           sversions.push(s);
           if (alternate[s]) {
             alternate[s].push(t);
@@ -106,7 +108,7 @@ module.exports = function trivialvars(cb) {
             alternate[s] = [t];
           }
         });
-        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: versions.map(v => interactionstring(v, ll))};
+        methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: sversions};
         
         /*
         
@@ -155,6 +157,38 @@ window.alternate = ` + JSON.stringify(alternate) + `;
     window.concretegroup = ` + JSON.stringify(experiment) + `;
 */
 
+
+
+
+function buildtvthing(intarr, pn, stage) {
+  let npn = [];
+  //remember that intarr has *rows* not changes!
+  for (let i = 0; i < pn.length; i++) {
+    let change = pn[i];
+    let ii = [i];
+    ii.push(i+1 === pn.length ? 0 : i+1);
+    let ongoing = intarr.filter(o => ii.every(n => o.ii.includes(n)));
+    //thing I'm building, new change
+    let nc = [];
+    for (let p = 1; p <= stage; p++) {
+      let add;
+      //should only be one at a time in this version!
+      let active = ongoing.find(o => o.pp.includes(p-1));
+      if (change.includes(p) && !active) {
+        add = true;
+      } else if (active) {
+        if (active.enterleave) {
+          add = true;
+        } else if (active.ii.length%2 === 1 && active.ii.slice(0,-2).includes(i)) {
+          add = true;
+        }
+      }
+      if (add) nc.push(p);
+    }
+    npn.push(nc);
+  }
+  return npn;
+}
 
 
 
