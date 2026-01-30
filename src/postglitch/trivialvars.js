@@ -24,7 +24,7 @@ const fixedpageparts = [`<head>
   </div>
   <div id="methodinfo"></div>
   <div>
-    <table>
+    <table id="trivialvars" class="sortable"> 
       <thead>
         <tr><th>Method</th><th>TV class</th><th>multi</th></tr>
       </thead>
