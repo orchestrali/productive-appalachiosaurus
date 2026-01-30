@@ -30,6 +30,8 @@ $(function() {
   
   $("table").on("click", ".methodtitle", titleclick);
   $("#choosemethod").on("click", choosemethodclick);
+
+  $("table.sortable").on("click", "th", tableheadclick);
 });
 
 
@@ -61,10 +63,14 @@ function titleclick(e) {
   viewmethod(title);
 }
 
-
+let sortindicator = `<span class="sortindicator">&nbsp;&#x25BE;</span>`
 function viewmethod(title) {
   $("table").hide();
-  $("th.pn").remove();
+  $("th.pn,.sortindicator").remove();
+  ["sorttable_sorted","sorttable_sorted_reverse"].forEach(c => {
+    $("."+c).removeClass(c);
+  });
+  
   
   method = methodindex[title];
   let cc = method.tvclasses;
@@ -99,6 +105,8 @@ function viewmethod(title) {
       if (j === pn.length/2 - 1) th = "HL: "+th;
       $("thead tr").append(`<th class="pn">${th}</th>`);
     });
+    $("thead tr").append(`<th class="pn sort_numeric">pn difference count</th>`);
+    $("thead th:first-child").addClass("sorttable_sorted").append(sortindicator);
     vartitles.sort();
     let tbody = "";
     vartitles.forEach(t => {
