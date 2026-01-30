@@ -147,14 +147,14 @@ function methodsearch(e) {
     if (searchvalue.length && value.slice(0,-1) === searchvalue) {
       //if a character has been added to the previous search
       let i = 0;
-      do {
+      while (i < methodlist.length) {
         if (methodlist[i].toLowerCase().indexOf(value) === -1) {
           $("#methodlist li:nth-child("+(i+1)+")").remove();
           methodlist.splice(i,1);
         } else {
           i++;
         }
-      } while (i < methodlist.length);
+      }
       
       matchmethods = matchmethods.filter(m => m.toLowerCase().includes(value));
     } else if (searchvalue.length && searchvalue.slice(0,-1) === value) {
