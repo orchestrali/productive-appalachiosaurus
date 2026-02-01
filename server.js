@@ -23,7 +23,7 @@ const find = require('./src/find/findFields.js');
 const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
-const testfunction = require('./src/postglitch/updatePerfs.js');
+const testfunction = require('./src/postglitch/fixpn.js');
 const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
 const testfortvs = require('./src/postglitch/testfortvs.js');
 const buildtvpage = require('./src/postglitch/trivialvars.js');
@@ -36,11 +36,13 @@ var db = connect();
 var huntpage;
 var tvresults;
 var tvpage;
+/*
 buildhuntpaths(page => {
   huntpage = page;
   //testfortvs(arr => tvresults = arr);
   buildtvpage(html => tvpage = html);
 });
+*/
 //updatefiles(() => {});
 //buildlocal();
 //separate();
@@ -122,7 +124,7 @@ app.get("/testing", (request, response) => {
   let now = Date.now();
   if (!time || now-time > 60000) {
     time = now;
-    db = connect();
+    
     testfunction();
   } else {
     console.log("already going? or already went?");
