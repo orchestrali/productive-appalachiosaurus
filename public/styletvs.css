@@ -24,7 +24,7 @@ li {
   position: relative;
 }
 #methodtitle {
-  width: 246px;
+  width: 248px;
 }
 #methodlist {
   margin-left: 176px;
@@ -71,6 +71,8 @@ td.same {
   color: gray;
 }
 
-
+td:last-child {
+  text-align: right;
+}
 
 
