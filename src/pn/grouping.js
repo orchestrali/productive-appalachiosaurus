@@ -1,5 +1,6 @@
 const places = require('../places');
 
+//actually only recognizing commas as grouping tokens
 var validGroupTokens = [',', '+', '&,', '&,+', '+,', '+,&'];
 
 module.exports = function grouping(tokens) {
@@ -24,31 +25,24 @@ module.exports = function grouping(tokens) {
   if (groupingString == '') {
     return tokens;
   } else {
-    var toBeReversed;
-    if (groupingString == ',') {
-      if (groupingTokens[0].index > 1) {
-        mirrorStart = 0;
-        mirrorEnd = groupingTokens[0].index - 1;
-        insertIndex = groupingTokens[0].index + 1;
-      } else if (groupingTokens[0].index == 1) {
-        mirrorStart = 2;
-        mirrorEnd = tokens.length-1;
-        insertIndex = tokens.length;
+    let commai = groupingString.indexOf(",");
+    let commaj = groupingTokens[commai].index;
+    let segments = [{start: commaj+1, end: tokens.length},{start: 0, end: commaj}];
+    segments.forEach(o => {
+      let first = tokens[o.start];
+      if (first.value != "+") {
+        let start = o.start;
+        if (first.value === "&") start++;
+        let l = o.end-start;
+        tokens[o.end-1].sympoint = true;
+        if (l > 1) {
+          //mirroring is actually possible
+          let toBeReversed = tokens.slice(start, o.end-1);
+          toBeReversed.reverse();
+          tokens.splice(o.end, 0, ...toBeReversed);
+        }
       }
-      
-    }
-    
-    if (mirrorEnd == 0) {
-      toBeReversed = tokens.slice(mirrorStart);
-    } else {
-      toBeReversed = tokens.slice(mirrorStart, mirrorEnd);
-    }
-    
-    toBeReversed.reverse();
-
-    for (var j = 0; j < toBeReversed.length; j++) {
-      tokens.splice(insertIndex + j, 0, toBeReversed[j]);
-    }
+    });
     
   }
  
