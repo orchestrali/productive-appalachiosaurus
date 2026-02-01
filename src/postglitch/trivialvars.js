@@ -102,11 +102,13 @@ module.exports = function trivialvars(cb) {
           let tvpn = buildtvthing(v, pn, m.stage);
           //stringify the place notation with the stage indicated at the beginning
           let s = places[m.stage-1]+":"+tvpn.map(a => rowstring(a)).join(".");
-          sversions.push(s);
-          if (alternate[s]) {
-            alternate[s].push(t);
-          } else {
-            alternate[s] = [t];
+          if (!sversions.includes(s)) {
+            sversions.push(s);
+            if (alternate[s]) {
+              alternate[s].push(t);
+            } else {
+              alternate[s] = [t];
+            }
           }
         });
         methodindex[t] = {ccNum: m.ccNum, pn: pn.map(a => rowstring(a)), tvclasses: sversions};
