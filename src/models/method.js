@@ -26,6 +26,7 @@ var methodSchema = new Schema ({
   maxBlows: Number,
   fchGroups: String,
   symmetry: [String],
+  symmetrypoints: [Number],
   pn: String,
   pnFull: [],
   calls: [{ type: Schema.Types.ObjectId, ref: 'call' }],
