@@ -13,8 +13,10 @@ module.exports = function parseNotation(method, err) {
       console.warn(method);
       err.push({notes: "invalid place notation", method: method});
     } else {
-      method.pnFull = stringify(grouping(parseNumAbbr(numJoin(tokens.tokens, method.stage))));
-      
+      let fulltokens = grouping(parseNumAbbr(numJoin(tokens.tokens, method.stage))).filter(t => t.type !== "grouping token");
+      method.pnFull = fulltokens.map(t => t.value);
+      let sympoints = fulltokens.map((t,i) => t.sympoint ? i : -1).filter(n => n > -1);
+      if (sympoints.length) method.symmetrypoints = sympoints;
     }
     //stringify(grouping(parseNumAbbr(numJoin(lexer(method.pn, numBells)), numBells)))
   } else {
