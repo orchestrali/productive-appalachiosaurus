@@ -17,7 +17,7 @@ module.exports = function fixpn() {
     console.log(res.filter(o => o.leadLength != o.pnFull.length).map(o => o.title));
 
     let i = 0;
-    //updateloop();
+    updateloop();
 
     function updateloop() {
       let p = res[i];
