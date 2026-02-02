@@ -36,13 +36,13 @@ var db = connect();
 var huntpage;
 var tvresults;
 var tvpage;
-/*
+
 buildhuntpaths(page => {
   huntpage = page;
   //testfortvs(arr => tvresults = arr);
   buildtvpage(html => tvpage = html);
 });
-*/
+
 //updatefiles(() => {});
 //buildlocal();
 //separate();
@@ -125,9 +125,9 @@ app.get("/testing", (request, response) => {
   if (!time || now-time > 60000) {
     time = now;
     
-    testfunction();
+    //testfunction();
   } else {
-    console.log("already going? or already went?");
+    //console.log("already going? or already went?");
   }
 });
 
