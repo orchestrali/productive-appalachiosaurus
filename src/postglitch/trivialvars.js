@@ -454,6 +454,29 @@ function findinteractions(pn, stage) {
         if (other) {
           let i = o.ii.length < other.ii.length ? o.id : other.id;
           extraii.push(i);
+        } else {
+          other = filter.slice(j+1).find(e => o.ii.some(n => e.ii.includes(n)));
+          if (other) {
+            let firsts = [o.ii[0],other.ii[0]];
+            let i = o.ii.includes(firsts[1]) ? other.id : o.id;
+            extraii.push(i);
+            let keep = i === other.id ? o : other;
+            let second = i === o.id ? o : other;
+            let last = keep.segment[keep.segment.length-1];
+            let comp;
+            second.ii.forEach((n,k) => {
+              if (keep.ii[keep.ii.length-1] === n) {
+                comp = second.segment[k];
+              }
+              if (!keep.ii.includes(n)) {
+                keep.ii.push(n);
+                let same = second.segment[k] === comp;
+                let seg = same ? last : last.split("").reverse().join("");
+                keep.segment.push(seg);
+              }
+            });
+            keep.enterleave = keep.segment[0] === keep.segment[keep.segment.length-1];
+          }
         }
       }
     }
