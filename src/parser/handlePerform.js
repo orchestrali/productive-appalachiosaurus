@@ -1,4 +1,4 @@
-const text = ['date', 'society', 'conductor', 'location'];
+const text = ['date', 'society', 'conductor']; //, 'location'
 const used = ['date', 'society', 'conductor', 'id', 'location', 'numberOfChanges'];
 
 //date, location, numberOfChanges, society, conductor, bbNum
@@ -6,15 +6,16 @@ module.exports = function handlePerform(p, tokens, err) {
   
   for (var i = 0; i < tokens.length; i++) {
     let discarded = [];
-    
-    if (text.indexOf(tokens[i].name) > -1) {
-      p[tokens[i].name] = tokens[i].value;
-      if (tokens[i].name === "location") {
-        for (let key in p.location) {
-          p.location[key] = p.location[key].replace(/&amp;/g, "&");
-        }
+
+    if (tokens[i].name === "location") {
+      p.location = {};
+      let val = tokens[i].value;
+      for (let key in val) {
+        p.location[key] = val[key].replace(/&amp;/gi, "&");
       }
-        //.replace(/&amp;/g, "&");
+    } else if (text.indexOf(tokens[i].name) > -1) {
+      p[tokens[i].name] = tokens[i].value.replace(/&amp;/gi, "&");
+      
     } else if (tokens[i].name == 'numberOfChanges') {
       p.numberOfChanges = Number(tokens[i].value);
     } else if (tokens[i].name == 'id') {
