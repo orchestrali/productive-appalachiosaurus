@@ -44,7 +44,7 @@ buildhuntpaths(page => {
   //testfortvs(arr => tvresults = arr);
   //buildtvpage(html => tvpage = html);
   testfunction(false, null, (mm) => {
-    jsonstring = mm; //JSON.stringify(mm, null, 2);
+    jsonstring = JSON.stringify(mm, null, 2);
   });
 });
 
@@ -126,7 +126,8 @@ app.get("/download", (request, response) => {
 
 app.get("/ccjson", (request, response) => {
   if (jsonstring) {
-    response.json(jsonstring);
+    response.set('Content-Type', 'text/plain');
+    response.send(jsonstring);
     //response.send(tvresults.map(o => o.title));
   } else {
     response.send("try again later");
