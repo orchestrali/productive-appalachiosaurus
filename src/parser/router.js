@@ -6,7 +6,7 @@ const parsePN = require('../pn/router.js');
 const truth = require('./truth.js');
 const addNums = require('./addNums.js');
 const keys1 = ['properties', 'method'];
-const keys2 = ['stage','huntbellPath', 'classification', 'lengthOfLead','numberOfHunts', 'leadHead', 'leadHeadCode', 'falseness', 'symmetry'];
+const keys2 = ['stage','huntbellPath', 'classification', 'lengthOfLead','numberOfHunts', 'leadHead', 'leadHeadCode', 'falseness', 'symmetry', 'extensionConstruction'];
 const keys2m = ['title', 'id', 'name', 'notation', 'references', 'performances', 'notes'];
 
 
