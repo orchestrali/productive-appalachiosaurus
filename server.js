@@ -126,7 +126,7 @@ app.get("/download", (request, response) => {
 
 app.get("/ccjson", (request, response) => {
   if (jsonstring) {
-    response.send(jsonstring);
+    response.json(jsonstring);
     //response.send(tvresults.map(o => o.title));
   } else {
     response.send("try again later");
