@@ -27,6 +27,7 @@ var methodSchema = new Schema ({
   fchGroups: String,
   symmetry: [String],
   symmetrypoints: [Number],
+  extensionConstruction: String,
   pn: String,
   pnFull: [],
   calls: [{ type: Schema.Types.ObjectId, ref: 'call' }],
