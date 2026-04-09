@@ -44,7 +44,7 @@ buildhuntpaths(page => {
   //testfortvs(arr => tvresults = arr);
   //buildtvpage(html => tvpage = html);
   testfunction(false, null, (mm) => {
-    jsonstring = JSON.stringify(mm, null, 2);
+    jsonstring = mm; //JSON.stringify(mm, null, 2);
   });
 });
 
