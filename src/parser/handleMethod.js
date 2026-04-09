@@ -35,9 +35,13 @@ module.exports = function handleMethod(method, tokens, err) {
       let perfs = lexer(tokens[i].value, keysP);
       let pArr = [];
       for (var j = 0; j < perfs.length; j++) {
-        let pTokens = lexer(perfs[j].value, keysP2);
-        let p = {type: perfs[j].name, methodTitle: title}; 
-        pArr.push(handlePerform(p, pTokens, err));
+        let ppoftype = Array.isArray(perfs[j].value) ? perfs[j].value : [perfs[j].value];
+        ppoftype.forEach(poftype => {
+          let pTokens = lexer(poftype, keysP2);
+          let p = {type: perfs[j].name, methodTitle: title};
+          pArr.push(handlePerform(p, pTokens, err));
+        });
+        
       }
       method.performances = pArr;
     }
