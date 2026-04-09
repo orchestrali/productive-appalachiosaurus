@@ -28,7 +28,7 @@ function parsecollection(full, ii, cb) {
   let f = full ? parse : require("../parser/routerminimal.js");
   while (collection.length) {
     let set = collection.shift();
-    if (i%1000 === 0) console.log("methodSet "+i);
+    if (i%100 === 0) console.log("methodSet "+i);
     let res = f(set);
     methods.push(...res.methods);
     i++;
