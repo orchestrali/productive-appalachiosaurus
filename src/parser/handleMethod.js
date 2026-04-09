@@ -1,4 +1,4 @@
-const text = ['title', 'name', 'notes'];
+const text = ['title', 'name', 'notes', 'extensionConstruction'];
 const addNest = require('./addNest.js');
 const lexer = require('./lexer.js');
 const newnames = require('../newnames.js');
