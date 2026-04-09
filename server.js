@@ -17,13 +17,14 @@ const updatedove = require('./src/updatedove.js');
 const doveformat = require('./src/dovebells.js');
 const separate = require('./src/separate.js');
 const update = require('./src/temporary.js');
+require('./src/postglitch/fixpn.js');
 */
 const connect = require('./src/mongoose/connect.js');
 const find = require('./src/find/findFields.js');
 const getmethods = require('./src/getmethods.js');
 const updatefiles = require('./src/updatefiles.js');
 const router = require('./src/newrouter.js');
-const testfunction = require('./src/postglitch/fixpn.js');
+const testfunction = require('./src/postglitch/convertxml.js');
 const buildhuntpaths = require('./src/postglitch/buildhuntpaths.js');
 const testfortvs = require('./src/postglitch/testfortvs.js');
 const buildtvpage = require('./src/postglitch/trivialvars.js');
@@ -36,11 +37,15 @@ var db = connect();
 var huntpage;
 var tvresults;
 var tvpage;
+var jsonstring;
 
 buildhuntpaths(page => {
   huntpage = page;
   //testfortvs(arr => tvresults = arr);
-  buildtvpage(html => tvpage = html);
+  //buildtvpage(html => tvpage = html);
+  testfunction(false, null, (mm) => {
+    jsonstring = JSON.stringify(mm, null, 2);
+  });
 });
 
 //updatefiles(() => {});
@@ -118,18 +123,31 @@ app.get("/download", (request, response) => {
   }
 });
 
+
+app.get("/ccjson", (request, response) => {
+  if (jsonstring) {
+    response.send(jsonstring);
+    //response.send(tvresults.map(o => o.title));
+  } else {
+    response.send("try again later");
+  }
+});
+
+/*
 var time;
 app.get("/testing", (request, response) => {
-  response.send("OK");
+  //response.send("OK");
   let now = Date.now();
   if (!time || now-time > 60000) {
     time = now;
     
-    //testfunction();
+    
   } else {
-    //console.log("already going? or already went?");
+    console.log("already going? or already went?");
+    response.send("timing issue");
   }
 });
+*/
 
 //old thing:
 let methods = false;
